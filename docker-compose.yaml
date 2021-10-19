@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  db:
+    image: wellintton/db
+    container_name: db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+
+  workbench:
+    image: wellintton/workbench
+    container_name: workbench
+    restart: always
+    ports:
+      - 8083:80
+    environment:
+      - PMA_ARBITRARY=1
+
+volumes:
+  db_data:
