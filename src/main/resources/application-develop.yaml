@@ -1,0 +1,5 @@
+algafoods:
+  notifier:
+    smtp:
+      port: 3000
+      server: "smtp.algafoods.local"

@@ -1,0 +1,14 @@
+algafoods:
+  notifier:
+    smtp:
+      port: 25      
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/algafoods?createDatabaseIfNotExist=true&serverTimezone=UTC
+    username: root
+    password: root   
+  jpa:
+    generate-ddl: true    
+    hibernate:
+      ddl-auto: create

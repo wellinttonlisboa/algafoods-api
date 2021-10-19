@@ -1,0 +1,4 @@
+algafoods:
+  notifier:
+    smtp:
+      server: "smtp.algafoods.com.br"
