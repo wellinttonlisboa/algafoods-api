@@ -1,23 +1,17 @@
-/*
-* @(#)Restaurant.java
-*
-* Copyright (c) J-Tech Solucoes em Informatica.
-* All Rights Reserved.
-*
-* This software is the confidential and proprietary information of J-Tech.
-* ("Confidential Information"). You shall not disclose such Confidential
-* Information and shall use it only in accordance with the terms of the
-* license agreement you entered into with J-Tech.
-*/
 package br.com.algaworks.algafoods.domain;
 
 import java.math.BigDecimal;
 import java.util.Objects;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+@Entity
 public class Restaurant {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private BigDecimal freight;
