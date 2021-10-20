@@ -12,7 +12,6 @@ import br.com.algaworks.algafoods.requersts.KitchenPostRequestBody;
 import br.com.algaworks.algafoods.requersts.KitchenPutRequestBody;
 import br.com.algaworks.algafoods.service.KitchenService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 
 @RestController
 @RequestMapping("kitchens")

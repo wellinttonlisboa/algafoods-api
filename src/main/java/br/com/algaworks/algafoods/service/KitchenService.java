@@ -11,10 +11,11 @@ import br.com.algaworks.algafoods.mapper.KitchenMapper;
 import br.com.algaworks.algafoods.repository.KitchenRepository;
 import br.com.algaworks.algafoods.requersts.KitchenPostRequestBody;
 import br.com.algaworks.algafoods.requersts.KitchenPutRequestBody;
+import lombok.RequiredArgsConstructor;
 
 @Service
 public class KitchenService {
-
+    
     @Autowired
     private KitchenRepository kitchenRepository;
 
@@ -35,15 +36,15 @@ public class KitchenService {
     }
 
     @Transactional
-    public Kitchen save(KitchenPostRequestBody KitchenPostRequestBody) {
-        return kitchenRepository.save(KitchenMapper.INSTANCE.toKitchen(KitchenPostRequestBody));
+    public Kitchen save(KitchenPostRequestBody kitchenPostRequestBody) {
+        return kitchenRepository.save(KitchenMapper.INSTANCE.toKitchen(kitchenPostRequestBody));
     }
 
     public void replace(KitchenPutRequestBody kitchenPutRequestBody) {
-//        Kitchen savedKitchen = findById(kitchenPutRequestBody.getId());
-//        Kitchen kitchen = KitchenMapper.INSTANCE.toKitchen(kitchenPutRequestBody);
-//        kitchen.setId(savedKitchen.getId());
-//        kitchenRepository.save(kitchen);
+        Kitchen savedKitchen = findById(kitchenPutRequestBody.getId());
+        Kitchen kitchen = KitchenMapper.INSTANCE.toKitchen(kitchenPutRequestBody);
+        kitchen.setId(savedKitchen.getId());
+        kitchenRepository.save(kitchen);
     }
 
     public void delete(long id) {
