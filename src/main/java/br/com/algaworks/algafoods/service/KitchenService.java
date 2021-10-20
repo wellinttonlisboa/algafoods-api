@@ -7,7 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import br.com.algaworks.algafoods.domain.Kitchen;
+import br.com.algaworks.algafoods.mapper.KitchenMapper;
 import br.com.algaworks.algafoods.repository.KitchenRepository;
+import br.com.algaworks.algafoods.requersts.KitchenPostRequestBody;
+import br.com.algaworks.algafoods.requersts.KitchenPutRequestBody;
 
 @Service
 public class KitchenService {
@@ -30,30 +33,21 @@ public class KitchenService {
     public Kitchen findById(long id) {
         return kitchenRepository.findById(id).get();
     }
-    
-    //    public Kitchen findByIdOrThrowBadRequestException(long id) {
-    //        return kitchenRepository.findById(id)
-    //                .orElseThrow(() -> new BadRequestException("Anime not Found"));
-    //    }
-    
+
     @Transactional
-    public Kitchen save(Kitchen kitchen) {
-        return kitchenRepository.save(kitchen);
+    public Kitchen save(KitchenPostRequestBody KitchenPostRequestBody) {
+        return kitchenRepository.save(KitchenMapper.INSTANCE.toKitchen(KitchenPostRequestBody));
     }
 
-    //    @Transactional
-    //    public Kitchen save(AnimePostRequestBody animePostRequestBody) {
-    //        return animeRepository.save(AnimeMapper.INSTANCE.toAnime(animePostRequestBody));
-    //    }
+    public void replace(KitchenPutRequestBody kitchenPutRequestBody) {
+//        Kitchen savedKitchen = findById(kitchenPutRequestBody.getId());
+//        Kitchen kitchen = KitchenMapper.INSTANCE.toKitchen(kitchenPutRequestBody);
+//        kitchen.setId(savedKitchen.getId());
+//        kitchenRepository.save(kitchen);
+    }
 
-    //    public void delete(long id) {
-    //        kitchenRepository.delete(findByIdOrThrowBadRequestException(id));
-    //    }
+    public void delete(long id) {
+        kitchenRepository.delete(findById(id));
+    }
 
-    //    public void replace(AnimePutRequestBody animePutRequestBody) {
-    //        Kitchen savedAnime = findByIdOrThrowBadRequestException(animePutRequestBody.getId());
-    //        Kitchen anime = AnimeMapper.INSTANCE.toAnime(animePutRequestBody);
-    //        anime.setId(savedAnime.getId());
-    //        animeRepository.save(anime);
-    //    }
 }

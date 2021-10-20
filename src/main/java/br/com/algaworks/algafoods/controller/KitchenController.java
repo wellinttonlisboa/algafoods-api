@@ -8,18 +8,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import br.com.algaworks.algafoods.domain.Kitchen;
+import br.com.algaworks.algafoods.requersts.KitchenPostRequestBody;
+import br.com.algaworks.algafoods.requersts.KitchenPutRequestBody;
 import br.com.algaworks.algafoods.service.KitchenService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 @RestController
 @RequestMapping("kitchens")
+@RequiredArgsConstructor
 public class KitchenController {
 
     @Autowired
     private KitchenService kitchenService;
 
     @GetMapping
-    //    @Operation(summary = "List all Kitchens paginated",
-    //            description = "The default size is 20, use the parameter size to change the default value", tags = { "Kitchen" })
     public ResponseEntity<Page<Kitchen>> list(Pageable pageable) {
         return ResponseEntity.ok(kitchenService.listAll(pageable));
     }
@@ -34,43 +37,26 @@ public class KitchenController {
         return ResponseEntity.ok(kitchenService.findById(id));
     }
 
-    //    @GetMapping(path = "/{id}")
-    //    public ResponseEntity<Kitchen> findById(@PathVariable long id) {
-    //        return ResponseEntity.ok(kitchenService.findByIdOrThrowBadRequestException(id));
-    //    }
-
-    //    @GetMapping(path = "by-id/{id}")
-    //    public ResponseEntity<Kitchen> findByIdAuthenticationPrincipal(@PathVariable long id, @AuthenticationPrincipal UserDetails userDetails) {
-    //        log.info(userDetails);
-    //        return ResponseEntity.ok(kitchenService.findByIdOrThrowBadRequestException(id));
-    //    }
-
     @GetMapping(path = "/find")
     public ResponseEntity<List<Kitchen>> findByName(@RequestParam String name) {
         return ResponseEntity.ok(kitchenService.findByName(name));
     }
 
     @PostMapping
-    public ResponseEntity<Kitchen> save(@RequestBody Kitchen KitchenPostRequestBody) {
-        return new ResponseEntity<>(kitchenService.save(KitchenPostRequestBody), HttpStatus.CREATED);
+    public ResponseEntity<Kitchen> save(@RequestBody KitchenPostRequestBody kitchenPostRequestBody) {
+        return new ResponseEntity<>(kitchenService.save(kitchenPostRequestBody), HttpStatus.CREATED);
     }
 
-    //    @PostMapping
-    //    public ResponseEntity<Kitchen> save(@RequestBody @Valid KitchenPostRequestBody KitchenPostRequestBody) {
-    //        return new ResponseEntity<>(kitchenService.save(KitchenPostRequestBody), HttpStatus.CREATED);
-    //    }
+    @DeleteMapping(path = "/admin/{id}")
+    public ResponseEntity<Void> delete(@PathVariable long id) {
+        kitchenService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
-    //    @DeleteMapping(path = "/admin/{id}")
-    //    @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Successful Operation"),
-    //            @ApiResponse(responseCode = "400", description = "When Kitchen Does Not Exist in The Database") })
-    //    public ResponseEntity<Void> delete(@PathVariable long id) {
-    //        kitchenService.delete(id);
-    //        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    //    }
+    @PutMapping
+    public ResponseEntity<Void> replace(@RequestBody KitchenPutRequestBody KitchenPutRequestBody) {
+        kitchenService.replace(KitchenPutRequestBody);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
-    //    @PutMapping
-    //    public ResponseEntity<Void> replace(@RequestBody KitchenPutRequestBody KitchenPutRequestBody) {
-    //        kitchenService.replace(KitchenPutRequestBody);
-    //        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    //    }
 }

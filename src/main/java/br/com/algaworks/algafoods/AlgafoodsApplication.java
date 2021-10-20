@@ -20,7 +20,7 @@ public class AlgafoodsApplication {
         Kitchen kitchen1 = new Kitchen();
         kitchen1.setName("Brasileira");
 
-        kitchenController.save(kitchen1);
+       // kitchenController.save(kitchen1);
 
         ResponseEntity<List<Kitchen>> kitchens = kitchenController.listAll();
         for (Kitchen kitchen : kitchens.getBody()) {
