@@ -1,17 +1,18 @@
 package br.com.algaworks.algafoods.service;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import br.com.algaworks.algafoods.domain.Kitchen;
 import br.com.algaworks.algafoods.mapper.KitchenMapper;
 import br.com.algaworks.algafoods.repository.KitchenRepository;
 import br.com.algaworks.algafoods.requersts.KitchenPostRequestBody;
 import br.com.algaworks.algafoods.requersts.KitchenPutRequestBody;
-import lombok.RequiredArgsConstructor;
 
 @Service
 public class KitchenService {
@@ -40,6 +41,7 @@ public class KitchenService {
         return kitchenRepository.save(KitchenMapper.INSTANCE.toKitchen(kitchenPostRequestBody));
     }
 
+    @Transactional
     public void replace(KitchenPutRequestBody kitchenPutRequestBody) {
         Kitchen savedKitchen = findById(kitchenPutRequestBody.getId());
         Kitchen kitchen = KitchenMapper.INSTANCE.toKitchen(kitchenPutRequestBody);

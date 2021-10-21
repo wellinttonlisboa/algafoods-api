@@ -6,6 +6,8 @@ import lombok.Data;
 @Data
 @Builder
 public class KitchenPutRequestBody {
+	
     private Long id;
     private String name;
+    
 }

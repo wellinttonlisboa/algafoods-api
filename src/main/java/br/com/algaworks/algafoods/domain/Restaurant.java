@@ -1,60 +1,46 @@
 package br.com.algaworks.algafoods.domain;
 
 import java.math.BigDecimal;
-import java.util.Objects;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
+import org.springframework.lang.Nullable;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
+@Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Restaurant {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    private BigDecimal freight;
+	@Id
+	@EqualsAndHashCode.Include
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    public Long getId() {
-        return id;
-    }
+	@NotEmpty(message = "The restaurant name cannot be empty")
+	@Column(nullable = false)
+	private String name;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	@NotEmpty(message = "The restaurant freight cannot be empty")
+	@Column(nullable = false)
+	private BigDecimal freight;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public BigDecimal getFreight() {
-        return freight;
-    }
-
-    public void setFreight(BigDecimal freight) {
-        this.freight = freight;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Restaurant other = (Restaurant) obj;
-        return Objects.equals(id, other.id);
-    }
+	@ManyToOne(optional = false)
+	private Kitchen kitchen;
 
 }
