@@ -42,7 +42,7 @@ class KitchenControllerTest {
 		BDDMockito.when(kitchenServiceMock.listAllNonPageable())
 				.thenReturn(List.of(KitchenCreator.createValidKitchen()));
 
-		BDDMockito.when(kitchenServiceMock.findById(ArgumentMatchers.anyLong()))
+		BDDMockito.when(kitchenServiceMock.findByIdOrThrowBadRequestException(ArgumentMatchers.anyLong()))
 				.thenReturn(KitchenCreator.createValidKitchen());
 
 		BDDMockito.when(kitchenServiceMock.findByName(ArgumentMatchers.anyString()))

@@ -8,7 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.algaworks.algafoods.domain.Kitchen;
 import br.com.algaworks.algafoods.domain.Restaurant;
+import br.com.algaworks.algafoods.exception.BadRequestException;
 import br.com.algaworks.algafoods.mapper.RestaurantMapper;
 import br.com.algaworks.algafoods.repository.RestaurantRepository;
 import br.com.algaworks.algafoods.requersts.RestaurantPostRequestBody;
@@ -32,8 +34,9 @@ public class RestaurantService {
         return restaurantRepository.findByName(name);
     }
 
-    public Restaurant findById(long id) {
-        return restaurantRepository.findById(id).get();
+    public Restaurant findByIdOrThrowBadRequestException(long id) {
+        return restaurantRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException("Restaurant not Found"));
     }
 
     @Transactional
@@ -43,14 +46,14 @@ public class RestaurantService {
 
     @Transactional
     public void replace(RestaurantPutRequestBody restaurantPutRequestBody) {
-        Restaurant savedRestaurant = findById(restaurantPutRequestBody.getId());
+        Restaurant savedRestaurant = findByIdOrThrowBadRequestException(restaurantPutRequestBody.getId());
         Restaurant restaurant = RestaurantMapper.INSTANCE.toRestaurant(restaurantPutRequestBody);
         restaurant.setId(savedRestaurant.getId());
         restaurantRepository.save(restaurant);
     }
 
     public void delete(long id) {
-        restaurantRepository.delete(findById(id));
+        restaurantRepository.delete(findByIdOrThrowBadRequestException(id));
     }
 
 }

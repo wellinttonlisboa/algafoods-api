@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.algaworks.algafoods.domain.Kitchen;
+import br.com.algaworks.algafoods.exception.BadRequestException;
 import br.com.algaworks.algafoods.mapper.KitchenMapper;
 import br.com.algaworks.algafoods.repository.KitchenRepository;
 import br.com.algaworks.algafoods.requersts.KitchenPostRequestBody;
@@ -32,8 +33,9 @@ public class KitchenService {
         return kitchenRepository.findByName(name);
     }
 
-    public Kitchen findById(long id) {
-        return kitchenRepository.findById(id).get();
+    public Kitchen findByIdOrThrowBadRequestException(long id) {
+        return kitchenRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException("Kitchen not Found"));
     }
 
     @Transactional
@@ -43,14 +45,14 @@ public class KitchenService {
 
     @Transactional
     public void replace(KitchenPutRequestBody kitchenPutRequestBody) {
-        Kitchen savedKitchen = findById(kitchenPutRequestBody.getId());
+        Kitchen savedKitchen = findByIdOrThrowBadRequestException(kitchenPutRequestBody.getId());
         Kitchen kitchen = KitchenMapper.INSTANCE.toKitchen(kitchenPutRequestBody);
         kitchen.setId(savedKitchen.getId());
         kitchenRepository.save(kitchen);
     }
 
     public void delete(long id) {
-        kitchenRepository.delete(findById(id));
+    	kitchenRepository.delete(findByIdOrThrowBadRequestException(id));
     }
 
 }

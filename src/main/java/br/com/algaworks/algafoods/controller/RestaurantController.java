@@ -43,7 +43,7 @@ public class RestaurantController {
 
 	@GetMapping(path = "/{id}")
 	public ResponseEntity<Restaurant> findById(@PathVariable long id) {
-		return ResponseEntity.ok(restaurantService.findById(id));
+		return ResponseEntity.ok(restaurantService.findByIdOrThrowBadRequestException(id));
 	}
 
 	@GetMapping(path = "/find")
