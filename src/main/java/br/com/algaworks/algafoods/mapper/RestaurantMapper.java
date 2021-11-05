@@ -1,6 +1,7 @@
 package br.com.algaworks.algafoods.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -8,7 +9,7 @@ import br.com.algaworks.algafoods.domain.Restaurant;
 import br.com.algaworks.algafoods.requersts.RestaurantPostRequestBody;
 import br.com.algaworks.algafoods.requersts.RestaurantPutRequestBody;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class RestaurantMapper {
 
     @Autowired
@@ -16,5 +17,5 @@ public abstract class RestaurantMapper {
 
     public abstract Restaurant toRestaurant(RestaurantPostRequestBody restaurantPostRequestBody);
 
-    public abstract Restaurant toRestaurant(RestaurantPutRequestBody restaurantPostRequestBody);
+    public abstract Restaurant toRestaurant(RestaurantPutRequestBody restaurantPutRequestBody);
 }

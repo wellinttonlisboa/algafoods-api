@@ -1,9 +1,11 @@
 package br.com.algaworks.algafoods.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 
 import lombok.AllArgsConstructor;
@@ -26,6 +28,7 @@ public class Kitchen {
 	private Long id;
 	
 	@NotEmpty(message = "The kitchen name cannot be empty")
+	@Column(nullable = false, unique = true)
 	private String name;
 
 }

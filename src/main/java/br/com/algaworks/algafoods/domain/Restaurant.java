@@ -33,7 +33,7 @@ public class Restaurant {
 	private Long id;
 
 	@NotEmpty(message = "The restaurant name cannot be empty")
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String name;
 
 	@NotEmpty(message = "The restaurant freight cannot be empty")

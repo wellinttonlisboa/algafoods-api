@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,6 +22,8 @@ import br.com.algaworks.algafoods.domain.Restaurant;
 import br.com.algaworks.algafoods.requersts.RestaurantPostRequestBody;
 import br.com.algaworks.algafoods.requersts.RestaurantPutRequestBody;
 import br.com.algaworks.algafoods.service.RestaurantService;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -57,14 +60,24 @@ public class RestaurantController {
 	}
 
 	@DeleteMapping(path = "/admin/{id}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Successful Operation"),
+            @ApiResponse(responseCode = "400", description = "When Restaurant Does Not Exist in The Database")
+    })
 	public ResponseEntity<Void> delete(@PathVariable long id) {
 		restaurantService.delete(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 	@PutMapping
-	public ResponseEntity<Void> replace(@RequestBody RestaurantPutRequestBody RestaurantPutRequestBody) {
-		restaurantService.replace(RestaurantPutRequestBody);
+	public ResponseEntity<Void> replace(@RequestBody RestaurantPutRequestBody restaurantPutRequestBody) {
+		restaurantService.replace(restaurantPutRequestBody);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
+	@PatchMapping
+	public ResponseEntity<Void> replacePartial(@RequestBody RestaurantPutRequestBody restaurantPutRequestBody) {
+		restaurantService.replacePartial(restaurantPutRequestBody);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 

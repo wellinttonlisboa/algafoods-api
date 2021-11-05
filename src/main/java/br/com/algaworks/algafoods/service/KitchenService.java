@@ -3,6 +3,7 @@ package br.com.algaworks.algafoods.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,42 +18,45 @@ import br.com.algaworks.algafoods.requersts.KitchenPutRequestBody;
 
 @Service
 public class KitchenService {
-    
-    @Autowired
-    private KitchenRepository kitchenRepository;
 
-    public Page<Kitchen> listAll(Pageable pageable) {
-        return kitchenRepository.findAll(pageable);
-    }
+	@Autowired
+	private KitchenRepository kitchenRepository;
 
-    public List<Kitchen> listAllNonPageable() {
-        return kitchenRepository.findAll();
-    }
+	public Page<Kitchen> listAll(Pageable pageable) {
+		return kitchenRepository.findAll(pageable);
+	}
 
-    public List<Kitchen> findByName(String name) {
-        return kitchenRepository.findByName(name);
-    }
+	public List<Kitchen> listAllNonPageable() {
+		return kitchenRepository.findAll();
+	}
 
-    public Kitchen findByIdOrThrowBadRequestException(long id) {
-        return kitchenRepository.findById(id)
-                .orElseThrow(() -> new BadRequestException("Kitchen not Found"));
-    }
+	public List<Kitchen> findByName(String name) {
+		return kitchenRepository.findByName(name);
+	}
 
-    @Transactional
-    public Kitchen save(KitchenPostRequestBody kitchenPostRequestBody) {
-        return kitchenRepository.save(KitchenMapper.INSTANCE.toKitchen(kitchenPostRequestBody));
-    }
+	public Kitchen findByIdOrThrowBadRequestException(long id) {
+		return kitchenRepository.findById(id).orElseThrow(() -> new BadRequestException("Kitchen not Found"));
+	}
 
-    @Transactional
-    public void replace(KitchenPutRequestBody kitchenPutRequestBody) {
-        Kitchen savedKitchen = findByIdOrThrowBadRequestException(kitchenPutRequestBody.getId());
-        Kitchen kitchen = KitchenMapper.INSTANCE.toKitchen(kitchenPutRequestBody);
-        kitchen.setId(savedKitchen.getId());
-        kitchenRepository.save(kitchen);
-    }
+	@Transactional
+	public Kitchen save(KitchenPostRequestBody kitchenPostRequestBody) {
+		return kitchenRepository.save(KitchenMapper.INSTANCE.toKitchen(kitchenPostRequestBody));
+	}
 
-    public void delete(long id) {
-    	kitchenRepository.delete(findByIdOrThrowBadRequestException(id));
-    }
+	@Transactional
+	public void replace(KitchenPutRequestBody kitchenPutRequestBody) {
+		Kitchen savedKitchen = findByIdOrThrowBadRequestException(kitchenPutRequestBody.getId());
+		Kitchen kitchen = KitchenMapper.INSTANCE.toKitchen(kitchenPutRequestBody);
+		kitchen.setId(savedKitchen.getId());
+		kitchenRepository.save(kitchen);
+	}
+
+	public void delete(long id) {
+		try {
+			kitchenRepository.delete(findByIdOrThrowBadRequestException(id));
+		} catch (DataIntegrityViolationException e) {
+			throw new BadRequestException("The Kitchen cannot be removed it is in use");
+		}
+	}
 
 }
