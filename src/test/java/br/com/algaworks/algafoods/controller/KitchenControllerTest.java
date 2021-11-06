@@ -87,7 +87,7 @@ class KitchenControllerTest {
 	void findById_ReturnsKitchen_WhenSuccessful() {
 		Long expectedId = KitchenCreator.createValidKitchen().getId();
 
-		Kitchen kitchen = kitchenController.findById(1).getBody();
+		Kitchen kitchen = kitchenController.findById(1L).getBody();
 
 		Assertions.assertThat(kitchen).isNotNull();
 
@@ -150,9 +150,9 @@ class KitchenControllerTest {
 	@DisplayName("delete removes kitchen when successful")
 	void delete_RemovesKitchen_WhenSuccessful() {
 
-		Assertions.assertThatCode(() -> kitchenController.delete(1)).doesNotThrowAnyException();
+		Assertions.assertThatCode(() -> kitchenController.delete(1L)).doesNotThrowAnyException();
 
-		ResponseEntity<Void> entity = kitchenController.delete(1);
+		ResponseEntity<Void> entity = kitchenController.delete(1L);
 
 		Assertions.assertThat(entity).isNotNull();
 
