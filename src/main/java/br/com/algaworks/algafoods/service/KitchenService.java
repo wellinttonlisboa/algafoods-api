@@ -36,6 +36,10 @@ public class KitchenService {
         return kitchenRepository.findByName(name);
     }
 
+    public List<Kitchen> findByNameContaining(String name) {
+        return kitchenRepository.findByNameContaining(name);
+    }
+
     public Kitchen findByIdOrThrowBadRequestException(long id) {
         return kitchenRepository.findById(id).orElseThrow(() -> new BadRequestException("Kitchen not Found"));
     }

@@ -9,4 +9,5 @@ import br.com.algaworks.algafoods.domain.Kitchen;
 public interface KitchenRepository extends JpaRepository<Kitchen, Long> {
 
     List<Kitchen> findByName(String name);
+    List<Kitchen> findByNameContaining(String name);
 }

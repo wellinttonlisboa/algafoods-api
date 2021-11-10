@@ -26,14 +26,14 @@ import lombok.extern.log4j.Log4j2;
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<BadRequestExceptionDetails> handleBadRequestException(BadRequestException bre) {
+    public ResponseEntity<BadRequestExceptionDetails> handleBadRequestException(BadRequestException badRequestException) {
         return new ResponseEntity<>(
                 BadRequestExceptionDetails.builder()
                         .timestamp(LocalDateTime.now())
                         .status(HttpStatus.BAD_REQUEST.value())
                         .title("Bad Request Exception, Check the Documentation")
-                        .details(bre.getMessage())
-                        .developerMessage(bre.getClass().getName())
+                        .details(badRequestException.getMessage())
+                        .developerMessage(badRequestException.getClass().getName())
                         .build(), HttpStatus.BAD_REQUEST);
     }
 

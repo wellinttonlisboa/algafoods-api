@@ -44,6 +44,11 @@ public class KitchenController {
         return ResponseEntity.ok(kitchenService.findByName(name));
     }
 
+    @GetMapping(path = "/find-like")
+    public ResponseEntity<List<Kitchen>> findByNameContaining(@RequestParam String name) {
+        return ResponseEntity.ok(kitchenService.findByNameContaining(name));
+    }
+    
     @PostMapping
     public ResponseEntity<Kitchen> save(@RequestBody KitchenPostRequestBody kitchenPostRequestBody) {
         return new ResponseEntity<>(kitchenService.save(kitchenPostRequestBody), HttpStatus.CREATED);

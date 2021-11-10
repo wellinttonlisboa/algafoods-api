@@ -9,9 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
-import org.springframework.lang.Nullable;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
