@@ -1,0 +1,13 @@
+package br.com.algaworks.algafoods.requersts;
+
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
+public class StatePutRequestBody {
+	
+    private Long id;
+    private String name;
+    
+}

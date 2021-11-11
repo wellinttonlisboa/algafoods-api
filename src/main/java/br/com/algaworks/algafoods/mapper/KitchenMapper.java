@@ -16,6 +16,5 @@ public abstract class KitchenMapper {
     public static final KitchenMapper INSTANCE = Mappers.getMapper(KitchenMapper.class);
 
     public abstract Kitchen toKitchen(KitchenPostRequestBody kitchenPostRequestBody);
-
     public abstract Kitchen toKitchen(KitchenPutRequestBody kitchenPostRequestBody);
 }

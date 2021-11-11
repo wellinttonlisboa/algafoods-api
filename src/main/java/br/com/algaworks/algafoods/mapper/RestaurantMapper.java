@@ -16,6 +16,5 @@ public abstract class RestaurantMapper {
     public static final RestaurantMapper INSTANCE = Mappers.getMapper(RestaurantMapper.class);
 
     public abstract Restaurant toRestaurant(RestaurantPostRequestBody restaurantPostRequestBody);
-
     public abstract Restaurant toRestaurant(RestaurantPutRequestBody restaurantPutRequestBody);
 }
