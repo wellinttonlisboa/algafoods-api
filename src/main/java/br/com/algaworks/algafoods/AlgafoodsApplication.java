@@ -9,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 
 import br.com.algaworks.algafoods.controller.RestaurantController;
 import br.com.algaworks.algafoods.domain.Restaurant;
-import br.com.algaworks.algafoods.requersts.RestaurantPostRequestBody;
-import br.com.algaworks.algafoods.requersts.RestaurantPutRequestBody;
 
 public class AlgafoodsApplication {
 

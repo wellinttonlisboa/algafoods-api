@@ -22,7 +22,6 @@ import br.com.algaworks.algafoods.domain.Permission;
 import br.com.algaworks.algafoods.requersts.PermissionPostRequestBody;
 import br.com.algaworks.algafoods.requersts.PermissionPutRequestBody;
 import br.com.algaworks.algafoods.service.PermissionService;
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("permissions")

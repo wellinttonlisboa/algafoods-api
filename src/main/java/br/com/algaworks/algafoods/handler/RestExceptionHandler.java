@@ -19,10 +19,8 @@ import br.com.algaworks.algafoods.exception.BadRequestException;
 import br.com.algaworks.algafoods.exception.BadRequestExceptionDetails;
 import br.com.algaworks.algafoods.exception.ExceptionDetails;
 import br.com.algaworks.algafoods.exception.ValidationExceptionDetails;
-import lombok.extern.log4j.Log4j2;
 
 @ControllerAdvice
-@Log4j2
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(BadRequestException.class)

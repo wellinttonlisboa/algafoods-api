@@ -22,9 +22,6 @@ import br.com.algaworks.algafoods.domain.State;
 import br.com.algaworks.algafoods.requersts.StatePostRequestBody;
 import br.com.algaworks.algafoods.requersts.StatePutRequestBody;
 import br.com.algaworks.algafoods.service.StateService;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("states")
