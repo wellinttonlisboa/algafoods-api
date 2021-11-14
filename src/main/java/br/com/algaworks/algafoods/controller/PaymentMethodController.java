@@ -22,13 +22,9 @@ import br.com.algaworks.algafoods.domain.PaymentMethod;
 import br.com.algaworks.algafoods.requersts.PaymentMethodPostRequestBody;
 import br.com.algaworks.algafoods.requersts.PaymentMethodPutRequestBody;
 import br.com.algaworks.algafoods.service.PaymentMethodService;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("payments")
-@RequiredArgsConstructor
 public class PaymentMethodController {
 
 	@Autowired
@@ -53,19 +49,20 @@ public class PaymentMethodController {
 	public ResponseEntity<List<PaymentMethod>> findByName(@RequestParam String name) {
 		return ResponseEntity.ok(paymentMethodService.findByName(name));
 	}
+	
+	@GetMapping(path = "/find-like")
+	public ResponseEntity<List<PaymentMethod>> findByNameContaining(@RequestParam String name) {
+		return ResponseEntity.ok(paymentMethodService.findByNameContaining(name));
+	}
 
 	@PostMapping
 	public ResponseEntity<PaymentMethod> save(@RequestBody PaymentMethodPostRequestBody paymentMethodPostRequestBody) {
 		return new ResponseEntity<>(paymentMethodService.save(paymentMethodPostRequestBody), HttpStatus.CREATED);
 	}
 
-	@DeleteMapping(path = "/admin/{id}")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Successful Operation"),
-            @ApiResponse(responseCode = "400", description = "When PaymentMethod Does Not Exist in The Database")
-    })
-	public ResponseEntity<Void> delete(@PathVariable long id) {
-		paymentMethodService.delete(id);
+	@PatchMapping
+	public ResponseEntity<Void> replacePartial(@RequestBody PaymentMethodPutRequestBody paymentMethodPutRequestBody) {
+		paymentMethodService.replacePartial(paymentMethodPutRequestBody);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
@@ -74,11 +71,11 @@ public class PaymentMethodController {
 		paymentMethodService.replace(paymentMethodPutRequestBody);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
-	
-	@PatchMapping
-	public ResponseEntity<Void> replacePartial(@RequestBody PaymentMethodPutRequestBody paymentMethodPutRequestBody) {
-		paymentMethodService.replacePartial(paymentMethodPutRequestBody);
+
+	@DeleteMapping(path = "/admin/{id}")
+	public ResponseEntity<Void> delete(@PathVariable long id) {
+		paymentMethodService.delete(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
-
+	
 }

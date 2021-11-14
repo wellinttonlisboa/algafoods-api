@@ -4,10 +4,8 @@ import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
 
-import org.mapstruct.BeanMapping;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.beans.BeanMap;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +19,6 @@ import br.com.algaworks.algafoods.mapper.PermissionMapper;
 import br.com.algaworks.algafoods.repository.PermissionRepository;
 import br.com.algaworks.algafoods.requersts.PermissionPostRequestBody;
 import br.com.algaworks.algafoods.requersts.PermissionPutRequestBody;
-import ch.qos.logback.core.joran.util.beans.BeanUtil;
 
 @Service
 public class PermissionService {
@@ -37,12 +34,16 @@ public class PermissionService {
 		return permissionRepository.findAll();
 	}
 
+	public Permission findByIdOrThrowBadRequestException(Long id) {
+		return permissionRepository.findById(id).orElseThrow(() -> new BadRequestException("Permission not Found"));
+	}
+
 	public List<Permission> findByName(String name) {
 		return permissionRepository.findByName(name);
 	}
 
-	public Permission findByIdOrThrowBadRequestException(long id) {
-		return permissionRepository.findById(id).orElseThrow(() -> new BadRequestException("Permission not Found"));
+	public List<Permission> findByNameContaining(String name) {
+		return permissionRepository.findByNameContaining(name);
 	}
 
 	@Transactional
@@ -57,26 +58,13 @@ public class PermissionService {
 	}
 
 	@Transactional
-	public void replace(PermissionPutRequestBody permissionPutRequestBody) {
-		Permission savedPermission = findByIdOrThrowBadRequestException(permissionPutRequestBody.getId());
-		Permission permission = PermissionMapper.INSTANCE.toPermission(permissionPutRequestBody);
-		permission.setId(savedPermission.getId());
-
-		try {
-			permissionRepository.save(permission);
-		} catch (EntityNotFoundException | JpaObjectRetrievalFailureException e) {
-			throw new BadRequestException("The permission cannot be saved");
-		}
-	}
-
-	@Transactional
 	public void replacePartial(PermissionPutRequestBody permissionPutRequestBody) {
 		Permission savedPermission = findByIdOrThrowBadRequestException(permissionPutRequestBody.getId());
 		Permission permission = PermissionMapper.INSTANCE.toPermission(permissionPutRequestBody);
 		BeanUtils.copyProperties(permission, savedPermission);
-	    System.out.println(permission);
-	    System.out.println(savedPermission);
-		//permission.setId(savedPermission.getId());
+		System.out.println(permission);
+		System.out.println(savedPermission);
+		// permission.setId(savedPermission.getId());
 
 		try {
 			permissionRepository.save(savedPermission);
@@ -85,11 +73,24 @@ public class PermissionService {
 		}
 	}
 	
+	@Transactional
+	public void replace(PermissionPutRequestBody permissionPutRequestBody) {
+		Permission savedPermission = findByIdOrThrowBadRequestException(permissionPutRequestBody.getId());
+		Permission permission = PermissionMapper.INSTANCE.toPermission(permissionPutRequestBody);
+		permission.setId(savedPermission.getId());
+		
+		try {
+			permissionRepository.save(permission);
+		} catch (EntityNotFoundException | JpaObjectRetrievalFailureException e) {
+			throw new BadRequestException("The permission cannot be saved");
+		}
+	}
+
 	public void delete(long id) {
 		try {
 			permissionRepository.delete(findByIdOrThrowBadRequestException(id));
 		} catch (DataIntegrityViolationException e) {
-			throw new BadRequestException("The permission cannot be removed it is in use");
+			throw new BadRequestException("The permission cannot be removed. It is in use");
 		}
 	}
 

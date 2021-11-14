@@ -3,6 +3,7 @@ package br.com.algaworks.algafoods.service;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -10,7 +11,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import br.com.algaworks.algafoods.domain.Kitchen;
 import br.com.algaworks.algafoods.exception.BadRequestException;
 import br.com.algaworks.algafoods.mapper.KitchenMapper;
@@ -32,6 +35,10 @@ public class KitchenService {
         return kitchenRepository.findAll();
     }
 
+    public Kitchen findByIdOrThrowBadRequestException(Long id) {
+    	return kitchenRepository.findById(id).orElseThrow(() -> new BadRequestException("Kitchen not Found"));
+    }
+    
     public List<Kitchen> findByName(String name) {
         return kitchenRepository.findByName(name);
     }
@@ -40,17 +47,13 @@ public class KitchenService {
         return kitchenRepository.findByNameContaining(name);
     }
 
-    public Kitchen findByIdOrThrowBadRequestException(long id) {
-        return kitchenRepository.findById(id).orElseThrow(() -> new BadRequestException("Kitchen not Found"));
-    }
-
     @Transactional
     public Kitchen save(KitchenPostRequestBody kitchenPostRequestBody) {
         return kitchenRepository.save(KitchenMapper.INSTANCE.toKitchen(kitchenPostRequestBody));
     }
 
     @Transactional
-    public Kitchen save(Long id, Map<String, Object> patchRequestBody) {
+    public Kitchen replacePartial(Long id, Map<String, Object> patchRequestBody) {
         Kitchen savedKitchen = findByIdOrThrowBadRequestException(id);
        
         ObjectMapper objectMapper = new ObjectMapper();
@@ -78,7 +81,7 @@ public class KitchenService {
         try {
             kitchenRepository.delete(findByIdOrThrowBadRequestException(id));
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("The Kitchen cannot be removed it is in use");
+            throw new BadRequestException("The Kitchen cannot be removed. It is in use");
         }
     }
 

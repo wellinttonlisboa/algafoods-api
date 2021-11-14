@@ -1,13 +1,12 @@
 package br.com.algaworks.algafoods.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
 
-import org.mapstruct.BeanMapping;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.beans.BeanMap;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,13 +20,13 @@ import br.com.algaworks.algafoods.mapper.CityMapper;
 import br.com.algaworks.algafoods.repository.CityRepository;
 import br.com.algaworks.algafoods.requersts.CityPostRequestBody;
 import br.com.algaworks.algafoods.requersts.CityPutRequestBody;
-import ch.qos.logback.core.joran.util.beans.BeanUtil;
 
 @Service
 public class CityService {
 
 	@Autowired
 	private CityRepository cityRepository;
+
 
 	public Page<City> listAll(Pageable pageable) {
 		return cityRepository.findAll(pageable);
@@ -37,35 +36,32 @@ public class CityService {
 		return cityRepository.findAll();
 	}
 
+	public City findByIdOrThrowBadRequestException(Long id) {
+		return cityRepository.findById(id).orElseThrow(() -> new BadRequestException("City not Found"));
+	}
+	
 	public List<City> findByName(String name) {
 		return cityRepository.findByName(name);
 	}
 
-	public City findByIdOrThrowBadRequestException(long id) {
-		return cityRepository.findById(id).orElseThrow(() -> new BadRequestException("City not Found"));
+	public List<City> findByNameContaining(String name) {
+		return cityRepository.findByNameContaining(name);
+	}
+
+	public List<City> findByNameContainingAndStateNameContaining(String cityName, String stateName) {
+		return cityRepository.findByNameContainingAndStateNameContaining(cityName, stateName);
+	}
+
+	public List<City> findByNameContainingAndStateId(String name, BigDecimal stateId) {
+		return cityRepository.findByNameContainingAndStateId(name, stateId);
 	}
 
 	@Transactional
 	public City save(CityPostRequestBody cityPostRequestBody) {
 		try {
 			return cityRepository.save(CityMapper.INSTANCE.toCity(cityPostRequestBody));
-		} catch (DataIntegrityViolationException e) {
+		} catch (DataIntegrityViolationException | EntityNotFoundException e) {
 			throw new BadRequestException("The City cannot be saved");
-		} catch (EntityNotFoundException e) {
-			throw new BadRequestException("The city cannot be saved");
-		}
-	}
-
-	@Transactional
-	public void replace(CityPutRequestBody cityPutRequestBody) {
-		City savedCity = findByIdOrThrowBadRequestException(cityPutRequestBody.getId());
-		City city = CityMapper.INSTANCE.toCity(cityPutRequestBody);
-		city.setId(savedCity.getId());
-
-		try {
-			cityRepository.save(city);
-		} catch (EntityNotFoundException | JpaObjectRetrievalFailureException e) {
-			throw new BadRequestException("The city cannot be saved");
 		}
 	}
 
@@ -74,22 +70,35 @@ public class CityService {
 		City savedCity = findByIdOrThrowBadRequestException(cityPutRequestBody.getId());
 		City city = CityMapper.INSTANCE.toCity(cityPutRequestBody);
 		BeanUtils.copyProperties(city, savedCity);
-	    System.out.println(city);
-	    System.out.println(savedCity);
-		//city.setId(savedCity.getId());
+		System.out.println(city);
+		System.out.println(savedCity);
+		// city.setId(savedCity.getId());
 
 		try {
 			cityRepository.save(savedCity);
 		} catch (EntityNotFoundException | JpaObjectRetrievalFailureException e) {
-			throw new BadRequestException("The city cannot be saved");
+			throw new BadRequestException("The city cannot be updated");
+		}
+	}
+
+	@Transactional
+	public void replace(CityPutRequestBody cityPutRequestBody) {
+		City savedCity = findByIdOrThrowBadRequestException(cityPutRequestBody.getId());
+		City city = CityMapper.INSTANCE.toCity(cityPutRequestBody);
+		city.setId(savedCity.getId());
+		
+		try {
+			cityRepository.save(city);
+		} catch (EntityNotFoundException | JpaObjectRetrievalFailureException e) {
+			throw new BadRequestException("The city cannot be updated");
 		}
 	}
 	
-	public void delete(long id) {
+	public void delete(Long id) {
 		try {
 			cityRepository.delete(findByIdOrThrowBadRequestException(id));
 		} catch (DataIntegrityViolationException e) {
-			throw new BadRequestException("The city cannot be removed it is in use");
+			throw new BadRequestException("The city cannot be removed. It is in use");
 		}
 	}
 

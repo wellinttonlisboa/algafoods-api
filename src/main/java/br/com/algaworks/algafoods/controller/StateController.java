@@ -27,8 +27,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("cities")
-@RequiredArgsConstructor
+@RequestMapping("states")
 public class StateController {
 
 	@Autowired
@@ -54,18 +53,19 @@ public class StateController {
 		return ResponseEntity.ok(stateService.findByName(name));
 	}
 
+	@GetMapping(path = "/find")
+	public ResponseEntity<List<State>> findByNameContaining(@RequestParam String name) {
+		return ResponseEntity.ok(stateService.findByNameContaining(name));
+	}
+
 	@PostMapping
 	public ResponseEntity<State> save(@RequestBody StatePostRequestBody statePostRequestBody) {
 		return new ResponseEntity<>(stateService.save(statePostRequestBody), HttpStatus.CREATED);
 	}
 
-	@DeleteMapping(path = "/admin/{id}")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Successful Operation"),
-            @ApiResponse(responseCode = "400", description = "When State Does Not Exist in The Database")
-    })
-	public ResponseEntity<Void> delete(@PathVariable long id) {
-		stateService.delete(id);
+	@PatchMapping
+	public ResponseEntity<Void> replacePartial(@RequestBody StatePutRequestBody statePutRequestBody) {
+		stateService.replacePartial(statePutRequestBody);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
@@ -75,9 +75,10 @@ public class StateController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
-	@PatchMapping
-	public ResponseEntity<Void> replacePartial(@RequestBody StatePutRequestBody statePutRequestBody) {
-		stateService.replacePartial(statePutRequestBody);
+	
+	@DeleteMapping(path = "/admin/{id}")
+	public ResponseEntity<Void> delete(@PathVariable long id) {
+		stateService.delete(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 

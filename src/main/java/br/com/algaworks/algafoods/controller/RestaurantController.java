@@ -1,5 +1,6 @@
 package br.com.algaworks.algafoods.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +23,9 @@ import br.com.algaworks.algafoods.domain.Restaurant;
 import br.com.algaworks.algafoods.requersts.RestaurantPostRequestBody;
 import br.com.algaworks.algafoods.requersts.RestaurantPutRequestBody;
 import br.com.algaworks.algafoods.service.RestaurantService;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("restaurants")
-@RequiredArgsConstructor
 public class RestaurantController {
 
 	@Autowired
@@ -45,13 +42,37 @@ public class RestaurantController {
 	}
 
 	@GetMapping(path = "/{id}")
-	public ResponseEntity<Restaurant> findById(@PathVariable long id) {
+	public ResponseEntity<Restaurant> findById(@PathVariable Long id) {
 		return ResponseEntity.ok(restaurantService.findByIdOrThrowBadRequestException(id));
 	}
 
-	@GetMapping(path = "/find")
-	public ResponseEntity<List<Restaurant>> findByName(@RequestParam String name) {
-		return ResponseEntity.ok(restaurantService.findByName(name));
+	@GetMapping(path = "/find-like")
+	public ResponseEntity<List<Restaurant>> findByNameContaining(@RequestParam String name) {
+		return ResponseEntity.ok(restaurantService.findByNameContaining(name));
+	}
+
+	@GetMapping(path = "/find-and-like")
+	public ResponseEntity<List<Restaurant>> findByNameContainingAndKitchenNameContaining(
+			@RequestParam String restaurantName, @RequestParam String kitchenName) {
+		return ResponseEntity
+				.ok(restaurantService.findByNameContainingAndKitchenNameContaining(restaurantName, kitchenName));
+	}
+
+	@GetMapping(path = "/find-and-id")
+	public ResponseEntity<List<Restaurant>> findByNameContainingAndKitchenId(@RequestParam String restaurantName,
+			@RequestParam BigDecimal kitchenId) {
+		return ResponseEntity.ok(restaurantService.findByNameContainingAndKitchenId(restaurantName, kitchenId));
+	}
+
+	@GetMapping(path = "/find-freight")
+	public ResponseEntity<List<Restaurant>> findByFreight(@RequestParam BigDecimal freight) {
+		return ResponseEntity.ok(restaurantService.findByFreight(freight));
+	}
+
+	@GetMapping(path = "/find-freight-between")
+	public ResponseEntity<List<Restaurant>> findByFreightBetween(@RequestParam BigDecimal startFreight,
+			@RequestParam BigDecimal endFreight) {
+		return ResponseEntity.ok(restaurantService.findByFreightBetween(startFreight, endFreight));
 	}
 
 	@PostMapping
@@ -59,13 +80,9 @@ public class RestaurantController {
 		return new ResponseEntity<>(restaurantService.save(restaurantPostRequestBody), HttpStatus.CREATED);
 	}
 
-	@DeleteMapping(path = "/admin/{id}")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Successful Operation"),
-            @ApiResponse(responseCode = "400", description = "When Restaurant Does Not Exist in The Database")
-    })
-	public ResponseEntity<Void> delete(@PathVariable long id) {
-		restaurantService.delete(id);
+	@PatchMapping
+	public ResponseEntity<Void> replacePartial(@RequestBody RestaurantPutRequestBody restaurantPutRequestBody) {
+		restaurantService.replacePartial(restaurantPutRequestBody);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
@@ -74,10 +91,10 @@ public class RestaurantController {
 		restaurantService.replace(restaurantPutRequestBody);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
-	
-	@PatchMapping
-	public ResponseEntity<Void> replacePartial(@RequestBody RestaurantPutRequestBody restaurantPutRequestBody) {
-		restaurantService.replacePartial(restaurantPutRequestBody);
+
+	@DeleteMapping(path = "/admin/{id}")
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
+		restaurantService.delete(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 

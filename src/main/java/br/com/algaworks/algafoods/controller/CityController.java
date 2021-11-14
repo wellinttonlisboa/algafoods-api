@@ -1,5 +1,6 @@
 package br.com.algaworks.algafoods.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +23,9 @@ import br.com.algaworks.algafoods.domain.City;
 import br.com.algaworks.algafoods.requersts.CityPostRequestBody;
 import br.com.algaworks.algafoods.requersts.CityPutRequestBody;
 import br.com.algaworks.algafoods.service.CityService;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("cities")
-@RequiredArgsConstructor
 public class CityController {
 
 	@Autowired
@@ -53,32 +50,45 @@ public class CityController {
 	public ResponseEntity<List<City>> findByName(@RequestParam String name) {
 		return ResponseEntity.ok(cityService.findByName(name));
 	}
+	
+	@GetMapping(path = "/find-like")
+	public ResponseEntity<List<City>> findByNameContaining(@RequestParam String name) {
+		return ResponseEntity.ok(cityService.findByNameContaining(name));
+	}
+	
+	@GetMapping(path = "/find-and-like")
+	public ResponseEntity<List<City>> findByNameContainingAndStateNameContaining(String cityName
+			,String stateName) {
+		return ResponseEntity.ok(cityService.findByNameContainingAndStateNameContaining(cityName, stateName));
+	}
+	
+	@GetMapping(path = "/find-and-id")
+	public ResponseEntity<List<City>> findByNameContainingAndStateId(String name
+			,BigDecimal stateId) {
+		return ResponseEntity.ok(cityService.findByNameContainingAndStateId(name, stateId));
+	}
 
 	@PostMapping
 	public ResponseEntity<City> save(@RequestBody CityPostRequestBody cityPostRequestBody) {
 		return new ResponseEntity<>(cityService.save(cityPostRequestBody), HttpStatus.CREATED);
 	}
 
-	@DeleteMapping(path = "/admin/{id}")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Successful Operation"),
-            @ApiResponse(responseCode = "400", description = "When City Does Not Exist in The Database")
-    })
-	public ResponseEntity<Void> delete(@PathVariable long id) {
-		cityService.delete(id);
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	}
-
-	@PutMapping
-	public ResponseEntity<Void> replace(@RequestBody CityPutRequestBody cityPutRequestBody) {
-		cityService.replace(cityPutRequestBody);
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	}
-	
 	@PatchMapping
 	public ResponseEntity<Void> replacePartial(@RequestBody CityPutRequestBody cityPutRequestBody) {
 		cityService.replacePartial(cityPutRequestBody);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
+	
+	@PutMapping
+	public ResponseEntity<Void> replace(@RequestBody CityPutRequestBody cityPutRequestBody) {
+		cityService.replace(cityPutRequestBody);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
 
+	@DeleteMapping(path = "/admin/{id}")
+	public ResponseEntity<Void> delete(@PathVariable long id) {
+		cityService.delete(id);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
 }
