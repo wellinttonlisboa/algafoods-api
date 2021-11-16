@@ -1,6 +1,7 @@
 package br.com.algaworks.algafoods.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -41,7 +42,7 @@ public class StateController {
 	}
 
 	@GetMapping(path = "/{id}")
-	public ResponseEntity<State> findById(@PathVariable long id) {
+	public ResponseEntity<State> findById(@PathVariable Long id) {
 		return ResponseEntity.ok(stateService.findByIdOrThrowBadRequestException(id));
 	}
 
@@ -50,7 +51,7 @@ public class StateController {
 		return ResponseEntity.ok(stateService.findByName(name));
 	}
 
-	@GetMapping(path = "/find")
+	@GetMapping(path = "/find-like")
 	public ResponseEntity<List<State>> findByNameContaining(@RequestParam String name) {
 		return ResponseEntity.ok(stateService.findByNameContaining(name));
 	}
@@ -60,10 +61,10 @@ public class StateController {
 		return new ResponseEntity<>(stateService.save(statePostRequestBody), HttpStatus.CREATED);
 	}
 
-	@PatchMapping
-	public ResponseEntity<Void> replacePartial(@RequestBody StatePutRequestBody statePutRequestBody) {
-		stateService.replacePartial(statePutRequestBody);
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	@PatchMapping(path = "/{id}")
+	public ResponseEntity<State> replacePartial(@PathVariable Long id
+			, @RequestBody Map<String, Object> patchRequestBody) {
+		return new ResponseEntity<>(stateService.replacePartial(id, patchRequestBody), HttpStatus.CREATED);
 	}
 
 	@PutMapping
@@ -74,7 +75,7 @@ public class StateController {
 	
 	
 	@DeleteMapping(path = "/admin/{id}")
-	public ResponseEntity<Void> delete(@PathVariable long id) {
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		stateService.delete(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}

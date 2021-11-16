@@ -1,6 +1,5 @@
 package br.com.algaworks.algafoods.repository;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,6 +15,6 @@ public interface CityRepository extends JpaRepository<City, Long> {
 	List<City> findByNameContainingAndStateNameContaining(String cityName
 			,String stateName);
 	List<City> findByNameContainingAndStateId(String name
-			,BigDecimal stateId);
+			, Long stateId);
 	
 }

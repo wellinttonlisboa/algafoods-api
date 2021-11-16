@@ -1,6 +1,7 @@
 package br.com.algaworks.algafoods.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -41,7 +42,7 @@ public class PermissionController {
 	}
 
 	@GetMapping(path = "/{id}")
-	public ResponseEntity<Permission> findById(@PathVariable long id) {
+	public ResponseEntity<Permission> findById(@PathVariable Long id) {
 		return ResponseEntity.ok(permissionService.findByIdOrThrowBadRequestException(id));
 	}
 
@@ -60,10 +61,10 @@ public class PermissionController {
 		return new ResponseEntity<>(permissionService.save(permissionPostRequestBody), HttpStatus.CREATED);
 	}
 
-	@PatchMapping
-	public ResponseEntity<Void> replacePartial(@RequestBody PermissionPutRequestBody permissionPutRequestBody) {
-		permissionService.replacePartial(permissionPutRequestBody);
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	@PatchMapping(path = "/{id}")
+	public ResponseEntity<Permission> replacePartial(@PathVariable Long id
+			, @RequestBody Map<String, Object> patchRequestBody) {
+		return new ResponseEntity<>(permissionService.replacePartial(id, patchRequestBody), HttpStatus.CREATED);
 	}
 
 	@PutMapping
@@ -73,7 +74,7 @@ public class PermissionController {
 	}
 
 	@DeleteMapping(path = "/admin/{id}")
-	public ResponseEntity<Void> delete(@PathVariable long id) {
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		permissionService.delete(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}

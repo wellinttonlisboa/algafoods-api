@@ -1,7 +1,5 @@
 package br.com.algaworks.algafoods.domain;
 
-import java.math.BigDecimal;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,7 +33,7 @@ public class Restaurant {
 
 	@NotEmpty(message = "The restaurant freight cannot be empty")
 	@Column(nullable = false)
-	private BigDecimal freight;
+	private Long freight;
 
 	@ManyToOne(optional = false)
 	private Kitchen kitchen;

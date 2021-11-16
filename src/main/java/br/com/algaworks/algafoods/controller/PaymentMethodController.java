@@ -1,6 +1,7 @@
 package br.com.algaworks.algafoods.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -41,7 +42,7 @@ public class PaymentMethodController {
 	}
 
 	@GetMapping(path = "/{id}")
-	public ResponseEntity<PaymentMethod> findById(@PathVariable long id) {
+	public ResponseEntity<PaymentMethod> findById(@PathVariable Long id) {
 		return ResponseEntity.ok(paymentMethodService.findByIdOrThrowBadRequestException(id));
 	}
 
@@ -60,10 +61,10 @@ public class PaymentMethodController {
 		return new ResponseEntity<>(paymentMethodService.save(paymentMethodPostRequestBody), HttpStatus.CREATED);
 	}
 
-	@PatchMapping
-	public ResponseEntity<Void> replacePartial(@RequestBody PaymentMethodPutRequestBody paymentMethodPutRequestBody) {
-		paymentMethodService.replacePartial(paymentMethodPutRequestBody);
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	@PatchMapping(path = "/{id}")
+	public ResponseEntity<PaymentMethod> replacePartial(@PathVariable Long id
+			, @RequestBody Map<String, Object> patchRequestBody) {
+		return new ResponseEntity<>(paymentMethodService.replacePartial(id, patchRequestBody), HttpStatus.CREATED);
 	}
 
 	@PutMapping
@@ -73,7 +74,7 @@ public class PaymentMethodController {
 	}
 
 	@DeleteMapping(path = "/admin/{id}")
-	public ResponseEntity<Void> delete(@PathVariable long id) {
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		paymentMethodService.delete(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}

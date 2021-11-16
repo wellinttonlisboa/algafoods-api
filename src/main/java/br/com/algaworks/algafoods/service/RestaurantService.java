@@ -1,11 +1,11 @@
 package br.com.algaworks.algafoods.service;
 
-import java.math.BigDecimal;
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityNotFoundException;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -13,6 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ReflectionUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.algaworks.algafoods.domain.Restaurant;
 import br.com.algaworks.algafoods.exception.BadRequestException;
@@ -53,16 +56,16 @@ public class RestaurantService {
 	}
 	
 	public List<Restaurant> findByNameContainingAndKitchenId(String restaurantName
-			,BigDecimal kitchenId) {
+			,Long kitchenId) {
 		return restaurantRepository.findByNameContainingAndKitchenId(restaurantName, kitchenId);
 	}
 	
-	public List<Restaurant> findByFreight(BigDecimal freight) {
+	public List<Restaurant> findByFreight(Long freight) {
 		return restaurantRepository.findByFreight(freight);
 	}
 	
-	public List<Restaurant> findByFreightBetween(BigDecimal startFreight
-			,BigDecimal endFreight) {
+	public List<Restaurant> findByFreightBetween(Long startFreight
+			,Long endFreight) {
 		return restaurantRepository.findByFreightBetween(startFreight, endFreight);
 	}
 
@@ -76,19 +79,20 @@ public class RestaurantService {
 	}
 
 	@Transactional
-	public void replacePartial(RestaurantPutRequestBody restaurantPutRequestBody) {
-		Restaurant savedRestaurant = findByIdOrThrowBadRequestException(restaurantPutRequestBody.getId());
-		Restaurant restaurant = RestaurantMapper.INSTANCE.toRestaurant(restaurantPutRequestBody);
-		BeanUtils.copyProperties(restaurant, savedRestaurant);
-		System.out.println(restaurant);
-		System.out.println(savedRestaurant);
-		//restaurant.setId(savedRestaurant.getId());
-		
-		try {
-			restaurantRepository.save(savedRestaurant);
-		} catch (EntityNotFoundException | JpaObjectRetrievalFailureException e) {
-			throw new BadRequestException("The Restaurant cannot be saved");
-		}
+	public Restaurant replacePartial(Long id, Map<String, Object> patchRequestBody) {
+        Restaurant updatedRestaurant = findByIdOrThrowBadRequestException(id);
+        
+        ObjectMapper objectMapper = new ObjectMapper();
+        Restaurant restaurant = objectMapper.convertValue(patchRequestBody, Restaurant.class);
+        
+        patchRequestBody.forEach((key, value) -> {
+            Field field = ReflectionUtils.findField(Restaurant.class, key);
+            field.setAccessible(Boolean.TRUE);
+            Object newValue = ReflectionUtils.getField(field, restaurant);
+            ReflectionUtils.setField(field, updatedRestaurant, newValue);
+        });
+        
+        return restaurantRepository.save(updatedRestaurant);
 	}
 	
 	@Transactional

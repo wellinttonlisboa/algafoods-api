@@ -1,11 +1,11 @@
 package br.com.algaworks.algafoods.service;
 
-import java.math.BigDecimal;
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityNotFoundException;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -13,6 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ReflectionUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.algaworks.algafoods.domain.City;
 import br.com.algaworks.algafoods.exception.BadRequestException;
@@ -52,7 +55,7 @@ public class CityService {
 		return cityRepository.findByNameContainingAndStateNameContaining(cityName, stateName);
 	}
 
-	public List<City> findByNameContainingAndStateId(String name, BigDecimal stateId) {
+	public List<City> findByNameContainingAndStateId(String name, Long stateId) {
 		return cityRepository.findByNameContainingAndStateId(name, stateId);
 	}
 
@@ -66,19 +69,20 @@ public class CityService {
 	}
 
 	@Transactional
-	public void replacePartial(CityPutRequestBody cityPutRequestBody) {
-		City savedCity = findByIdOrThrowBadRequestException(cityPutRequestBody.getId());
-		City city = CityMapper.INSTANCE.toCity(cityPutRequestBody);
-		BeanUtils.copyProperties(city, savedCity);
-		System.out.println(city);
-		System.out.println(savedCity);
-		// city.setId(savedCity.getId());
-
-		try {
-			cityRepository.save(savedCity);
-		} catch (EntityNotFoundException | JpaObjectRetrievalFailureException e) {
-			throw new BadRequestException("The city cannot be updated");
-		}
+	public City replacePartial(Long id, Map<String, Object> patchRequestBody) {
+        City updatedCity = findByIdOrThrowBadRequestException(id);
+        
+        ObjectMapper objectMapper = new ObjectMapper();
+        City city = objectMapper.convertValue(patchRequestBody, City.class);
+        
+        patchRequestBody.forEach((key, value) -> {
+            Field field = ReflectionUtils.findField(City.class, key);
+            field.setAccessible(Boolean.TRUE);
+            Object newValue = ReflectionUtils.getField(field, city);
+            ReflectionUtils.setField(field, updatedCity, newValue);
+        });
+        
+        return cityRepository.save(updatedCity);
 	}
 
 	@Transactional

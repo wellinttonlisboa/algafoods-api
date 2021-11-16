@@ -147,7 +147,7 @@ class KitchenServiceTest {
 	@DisplayName("delete removes kitchen when successful")
 	void delete_RemovesKitchen_WhenSuccessful() {
 
-		Assertions.assertThatCode(() -> kitchenService.delete(1)).doesNotThrowAnyException();
+		Assertions.assertThatCode(() -> kitchenService.delete(1L)).doesNotThrowAnyException();
 
 	}
 }

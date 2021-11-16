@@ -1,10 +1,11 @@
 package br.com.algaworks.algafoods.service;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityNotFoundException;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -12,6 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ReflectionUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.algaworks.algafoods.domain.State;
 import br.com.algaworks.algafoods.exception.BadRequestException;
@@ -34,7 +38,7 @@ public class StateService {
 		return stateRepository.findAll();
 	}
 
-	public State findByIdOrThrowBadRequestException(long id) {
+	public State findByIdOrThrowBadRequestException(Long id) {
 		return stateRepository.findById(id).orElseThrow(() -> new BadRequestException("State not Found"));
 	}
 	
@@ -56,19 +60,20 @@ public class StateService {
 	}
 
 	@Transactional
-	public void replacePartial(StatePutRequestBody statePutRequestBody) {
-		State savedState = findByIdOrThrowBadRequestException(statePutRequestBody.getId());
-		State state = StateMapper.INSTANCE.toState(statePutRequestBody);
-		BeanUtils.copyProperties(state, savedState);
-	    System.out.println(state);
-	    System.out.println(savedState);
-		//state.setId(savedState.getId());
-
-		try {
-			stateRepository.save(savedState);
-		} catch (EntityNotFoundException | JpaObjectRetrievalFailureException e) {
-			throw new BadRequestException("The state cannot be saved");
-		}
+	public State replacePartial(Long id, Map<String, Object> patchRequestBody) {
+        State updatedState = findByIdOrThrowBadRequestException(id);
+        
+        ObjectMapper objectMapper = new ObjectMapper();
+        State state = objectMapper.convertValue(patchRequestBody, State.class);
+        
+        patchRequestBody.forEach((key, value) -> {
+            Field field = ReflectionUtils.findField(State.class, key);
+            field.setAccessible(Boolean.TRUE);
+            Object newValue = ReflectionUtils.getField(field, state);
+            ReflectionUtils.setField(field, updatedState, newValue);
+        });
+        
+        return stateRepository.save(updatedState);
 	}
 	
 	@Transactional
@@ -84,7 +89,7 @@ public class StateService {
 		}
 	}
 	
-	public void delete(long id) {
+	public void delete(Long id) {
 		try {
 			stateRepository.delete(findByIdOrThrowBadRequestException(id));
 		} catch (DataIntegrityViolationException e) {

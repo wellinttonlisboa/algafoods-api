@@ -1,7 +1,7 @@
 package br.com.algaworks.algafoods.controller;
 
-import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,7 +42,7 @@ public class CityController {
 	}
 
 	@GetMapping(path = "/{id}")
-	public ResponseEntity<City> findById(@PathVariable long id) {
+	public ResponseEntity<City> findById(@PathVariable Long id) {
 		return ResponseEntity.ok(cityService.findByIdOrThrowBadRequestException(id));
 	}
 
@@ -57,14 +57,14 @@ public class CityController {
 	}
 	
 	@GetMapping(path = "/find-and-like")
-	public ResponseEntity<List<City>> findByNameContainingAndStateNameContaining(String cityName
-			,String stateName) {
+	public ResponseEntity<List<City>> findByNameContainingAndStateNameContaining(@PathVariable String cityName
+			,@PathVariable String stateName) {
 		return ResponseEntity.ok(cityService.findByNameContainingAndStateNameContaining(cityName, stateName));
 	}
 	
 	@GetMapping(path = "/find-and-id")
-	public ResponseEntity<List<City>> findByNameContainingAndStateId(String name
-			,BigDecimal stateId) {
+	public ResponseEntity<List<City>> findByNameContainingAndStateId(@PathVariable String name
+			,@PathVariable Long stateId) {
 		return ResponseEntity.ok(cityService.findByNameContainingAndStateId(name, stateId));
 	}
 
@@ -73,10 +73,10 @@ public class CityController {
 		return new ResponseEntity<>(cityService.save(cityPostRequestBody), HttpStatus.CREATED);
 	}
 
-	@PatchMapping
-	public ResponseEntity<Void> replacePartial(@RequestBody CityPutRequestBody cityPutRequestBody) {
-		cityService.replacePartial(cityPutRequestBody);
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	@PatchMapping(path = "/{id}")
+	public ResponseEntity<City> replacePartial(@PathVariable Long id
+			, @RequestBody Map<String, Object> patchRequestBody) {
+		return new ResponseEntity<>(cityService.replacePartial(id, patchRequestBody), HttpStatus.CREATED);
 	}
 	
 	@PutMapping
@@ -86,7 +86,7 @@ public class CityController {
 	}
 
 	@DeleteMapping(path = "/admin/{id}")
-	public ResponseEntity<Void> delete(@PathVariable long id) {
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		cityService.delete(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}

@@ -1,6 +1,5 @@
 package br.com.algaworks.algafoods.repository;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,9 +15,9 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 	List<Restaurant> findByNameContainingAndKitchenNameContaining(String restaurantName
 			,String kitchenName);
 	List<Restaurant> findByNameContainingAndKitchenId(String restaurantName
-			,BigDecimal kitchenId);
-	List<Restaurant> findByFreight(BigDecimal freight);
-	List<Restaurant> findByFreightBetween(BigDecimal startFreight
-			,BigDecimal endFreight);
+			,Long kitchenId);
+	List<Restaurant> findByFreight(Long freight);
+	List<Restaurant> findByFreightBetween(Long startFreight
+			,Long endFreight);
 	
 }

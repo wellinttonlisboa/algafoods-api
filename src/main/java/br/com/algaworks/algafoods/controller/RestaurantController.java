@@ -1,7 +1,7 @@
 package br.com.algaworks.algafoods.controller;
 
-import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -60,18 +60,18 @@ public class RestaurantController {
 
 	@GetMapping(path = "/find-and-id")
 	public ResponseEntity<List<Restaurant>> findByNameContainingAndKitchenId(@RequestParam String restaurantName,
-			@RequestParam BigDecimal kitchenId) {
+			@RequestParam Long kitchenId) {
 		return ResponseEntity.ok(restaurantService.findByNameContainingAndKitchenId(restaurantName, kitchenId));
 	}
 
 	@GetMapping(path = "/find-freight")
-	public ResponseEntity<List<Restaurant>> findByFreight(@RequestParam BigDecimal freight) {
+	public ResponseEntity<List<Restaurant>> findByFreight(@RequestParam Long freight) {
 		return ResponseEntity.ok(restaurantService.findByFreight(freight));
 	}
 
 	@GetMapping(path = "/find-freight-between")
-	public ResponseEntity<List<Restaurant>> findByFreightBetween(@RequestParam BigDecimal startFreight,
-			@RequestParam BigDecimal endFreight) {
+	public ResponseEntity<List<Restaurant>> findByFreightBetween(@RequestParam Long startFreight,
+			@RequestParam Long endFreight) {
 		return ResponseEntity.ok(restaurantService.findByFreightBetween(startFreight, endFreight));
 	}
 
@@ -80,10 +80,10 @@ public class RestaurantController {
 		return new ResponseEntity<>(restaurantService.save(restaurantPostRequestBody), HttpStatus.CREATED);
 	}
 
-	@PatchMapping
-	public ResponseEntity<Void> replacePartial(@RequestBody RestaurantPutRequestBody restaurantPutRequestBody) {
-		restaurantService.replacePartial(restaurantPutRequestBody);
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	@PatchMapping(path = "/{id}")
+	public ResponseEntity<Restaurant> replacePartial(@PathVariable Long id
+			, @RequestBody Map<String, Object> patchRequestBody) {
+		return new ResponseEntity<>(restaurantService.replacePartial(id, patchRequestBody), HttpStatus.CREATED);
 	}
 
 	@PutMapping
