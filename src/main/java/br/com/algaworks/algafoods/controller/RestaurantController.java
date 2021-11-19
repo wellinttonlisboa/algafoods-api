@@ -2,6 +2,7 @@ package br.com.algaworks.algafoods.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -63,7 +64,25 @@ public class RestaurantController {
 			@RequestParam Long kitchenId) {
 		return ResponseEntity.ok(restaurantService.findByNameContainingAndKitchenId(restaurantName, kitchenId));
 	}
+	
+	@GetMapping(path = "/find-and-id-caraideasa")
+	public ResponseEntity<List<Restaurant>> caraiDeAsa(@RequestParam String restaurantName,
+			@RequestParam Long kitchenId) {
+		return ResponseEntity.ok(restaurantService.caraiDeAsa(restaurantName, kitchenId));
+	}
 
+	@GetMapping(path = "/find-freight-between-barrildobrado")
+	public ResponseEntity<List<Restaurant>> barrilDobrado(@RequestParam String name
+			, @RequestParam Long startFreight
+			, @RequestParam Long endFreight) {
+		return ResponseEntity.ok(restaurantService.barrilDobrado(name, startFreight, endFreight));
+	}
+	
+	@GetMapping(path = "/first")
+	public ResponseEntity<Optional<Restaurant>> customBuscarPrimeiro() {
+		return ResponseEntity.ok(restaurantService.customBuscarPrimeiro());
+	}
+	
 	@GetMapping(path = "/find-freight")
 	public ResponseEntity<List<Restaurant>> findByFreight(@RequestParam Long freight) {
 		return ResponseEntity.ok(restaurantService.findByFreight(freight));

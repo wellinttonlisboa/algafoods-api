@@ -3,6 +3,7 @@ package br.com.algaworks.algafoods.service;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -60,6 +61,20 @@ public class RestaurantService {
 		return restaurantRepository.findByNameContainingAndKitchenId(restaurantName, kitchenId);
 	}
 	
+	public List<Restaurant> caraiDeAsa(String restaurantName
+			,Long kitchenId) {
+		return restaurantRepository.caraiDeAsa(restaurantName, kitchenId);
+	}
+	
+	public List<Restaurant> barrilDobrado(String name, Long startFreight, Long endFreight) {
+		return restaurantRepository.barrilDobrado(name, startFreight, endFreight);
+	}
+	
+	public Optional<Restaurant> customBuscarPrimeiro() {
+		return restaurantRepository.buscarPrimeiro();
+	}
+	
+	
 	public List<Restaurant> findByFreight(Long freight) {
 		return restaurantRepository.findByFreight(freight);
 	}
@@ -100,6 +115,9 @@ public class RestaurantService {
 		Restaurant savedRestaurant = findByIdOrThrowBadRequestException(restaurantPutRequestBody.getId());
 		Restaurant restaurant = RestaurantMapper.INSTANCE.toRestaurant(restaurantPutRequestBody);
 		restaurant.setId(savedRestaurant.getId());
+		restaurant.setPayments(savedRestaurant.getPayments());
+		restaurant.setAddress(savedRestaurant.getAddress());
+		restaurant.setCreatedAt(savedRestaurant.getCreatedAt());
 
 		try {
 			restaurantRepository.save(restaurant);
