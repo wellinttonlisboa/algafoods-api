@@ -12,7 +12,6 @@ import br.com.algaworks.algafoods.requersts.KitchenPutRequestBody;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class KitchenMapper {
 
-    @Autowired
     public static final KitchenMapper INSTANCE = Mappers.getMapper(KitchenMapper.class);
 
     public abstract Kitchen toKitchen(KitchenPostRequestBody kitchenPostRequestBody);

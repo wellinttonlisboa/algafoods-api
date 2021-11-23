@@ -12,7 +12,6 @@ import br.com.algaworks.algafoods.requersts.RestaurantPutRequestBody;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class RestaurantMapper {
 
-    @Autowired
     public static final RestaurantMapper INSTANCE = Mappers.getMapper(RestaurantMapper.class);
 
     public abstract Restaurant toRestaurant(RestaurantPostRequestBody restaurantPostRequestBody);

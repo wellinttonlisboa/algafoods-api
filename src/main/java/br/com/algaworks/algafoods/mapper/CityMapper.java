@@ -12,7 +12,6 @@ import br.com.algaworks.algafoods.requersts.CityPutRequestBody;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class CityMapper {
 
-    @Autowired
     public static final CityMapper INSTANCE = Mappers.getMapper(CityMapper.class);
 
     public abstract City toCity(CityPostRequestBody cityPostRequestBody);

@@ -12,7 +12,6 @@ import br.com.algaworks.algafoods.requersts.PermissionPutRequestBody;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class PermissionMapper {
 
-    @Autowired
     public static final PermissionMapper INSTANCE = Mappers.getMapper(PermissionMapper.class);
 
     public abstract Permission toPermission(PermissionPostRequestBody permissionPostRequestBody);

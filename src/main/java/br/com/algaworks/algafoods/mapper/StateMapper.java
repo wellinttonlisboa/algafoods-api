@@ -12,7 +12,6 @@ import br.com.algaworks.algafoods.requersts.StatePutRequestBody;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class StateMapper {
 
-    @Autowired
     public static final StateMapper INSTANCE = Mappers.getMapper(StateMapper.class);
 
     public abstract State toState(StatePostRequestBody statePostRequestBody);

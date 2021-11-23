@@ -115,7 +115,12 @@ public class RestaurantService {
 		Restaurant savedRestaurant = findByIdOrThrowBadRequestException(restaurantPutRequestBody.getId());
 		Restaurant restaurant = RestaurantMapper.INSTANCE.toRestaurant(restaurantPutRequestBody);
 		restaurant.setId(savedRestaurant.getId());
+		
+		
+		
+		
 		restaurant.setPayments(savedRestaurant.getPayments());
+		restaurant.setProducts(savedRestaurant.getProducts());
 		restaurant.setAddress(savedRestaurant.getAddress());
 		restaurant.setCreatedAt(savedRestaurant.getCreatedAt());
 

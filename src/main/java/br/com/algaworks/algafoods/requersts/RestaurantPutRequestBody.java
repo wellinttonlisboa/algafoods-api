@@ -6,6 +6,7 @@ import java.util.Set;
 import br.com.algaworks.algafoods.domain.Address;
 import br.com.algaworks.algafoods.domain.Kitchen;
 import br.com.algaworks.algafoods.domain.PaymentMethod;
+import br.com.algaworks.algafoods.domain.Product;
 import lombok.Builder;
 import lombok.Data;
 
@@ -19,6 +20,7 @@ public class RestaurantPutRequestBody {
 	private Kitchen kitchen;
 	private Address address;
 	private Set<PaymentMethod> payments;
+	private Set<Product> products;
 	private LocalDateTime createdAt;
 
 }

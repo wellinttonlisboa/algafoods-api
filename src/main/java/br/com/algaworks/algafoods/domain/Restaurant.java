@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -52,8 +53,12 @@ public class Restaurant {
 	private Kitchen kitchen;
 	
 	@JsonIgnore
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
 	private Set<PaymentMethod> payments;
+	
+	@JsonIgnore
+	@ManyToMany(fetch = FetchType.LAZY)
+	private Set<Product> products;
 
 	@CreationTimestamp
 	@Column(nullable = false)

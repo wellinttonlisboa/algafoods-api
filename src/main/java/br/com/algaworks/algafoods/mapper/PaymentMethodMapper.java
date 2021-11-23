@@ -12,7 +12,6 @@ import br.com.algaworks.algafoods.requersts.PaymentMethodPutRequestBody;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class PaymentMethodMapper {
 
-    @Autowired
     public static final PaymentMethodMapper INSTANCE = Mappers.getMapper(PaymentMethodMapper.class);
 
     public abstract PaymentMethod toPaymentMethod(PaymentMethodPostRequestBody paymentMethodPostRequestBody);
