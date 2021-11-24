@@ -16,9 +16,9 @@ insert into permission (id, description, name) values (1, 'Create object', 'CREA
 
 insert into groups (id, name) values (1, 'Administrators');
 
-insert into groups_permission (groups_id, permission_id) values (1, 1);
+insert into groups_permission (group_id, permission_id) values (1, 1);
 
-insert into restaurant_payments (restaurant_id, payments_id) values (1, 1), (1, 2), (2, 1);
+insert into restaurant_payment (restaurant_id, payment_id) values (1, 1), (1, 2), (2, 1);
 
 insert into status (id, state, description) values (1, true, 'Activate'), (2, false, 'Deactivate');
 
@@ -34,6 +34,6 @@ insert into product (id, name, description, price, status_id, restaurant_id) val
 
 insert into user (id, name, email, password, created_at) value (1, 'Wellintton Lisboa', 'wlisboa@outlook.com', 'passw0rd', utc_timestamp);
 
-insert into user_groups (user_id, groups_id) values (1, 1);
+insert into user_groups (user_id, group_id) values (1, 1);
 
-insert into restaurant_products (restaurant_id, products_id) value (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 7), (1, 8), (1, 9), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5);
+insert into restaurant_product (restaurant_id, product_id) value (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 7), (1, 8), (1, 9), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5);
