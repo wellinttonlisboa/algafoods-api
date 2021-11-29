@@ -39,7 +39,7 @@ public class PermissionService {
 	}
 
 	public Permission findByIdOrThrowBadRequestException(Long id) {
-		return permissionRepository.findById(id).orElseThrow(() -> new BadRequestException("Permission not Found"));
+		return permissionRepository.findById(id).orElseThrow(() -> new BadRequestException("Permission not Found", null));
 	}
 
 	public List<Permission> findByName(String name) {
@@ -55,9 +55,9 @@ public class PermissionService {
 		try {
 			return permissionRepository.save(PermissionMapper.INSTANCE.toPermission(permissionPostRequestBody));
 		} catch (DataIntegrityViolationException e) {
-			throw new BadRequestException("The Permission cannot be saved");
+			throw new BadRequestException("The Permission cannot be saved", null);
 		} catch (EntityNotFoundException e) {
-			throw new BadRequestException("The permission cannot be saved");
+			throw new BadRequestException("The permission cannot be saved", null);
 		}
 	}
 
@@ -87,7 +87,7 @@ public class PermissionService {
 		try {
 			permissionRepository.save(permission);
 		} catch (EntityNotFoundException | JpaObjectRetrievalFailureException e) {
-			throw new BadRequestException("The permission cannot be saved");
+			throw new BadRequestException("The permission cannot be saved", null);
 		}
 	}
 
@@ -95,7 +95,7 @@ public class PermissionService {
 		try {
 			permissionRepository.delete(findByIdOrThrowBadRequestException(id));
 		} catch (DataIntegrityViolationException e) {
-			throw new BadRequestException("The permission cannot be removed. It is in use");
+			throw new BadRequestException("The permission cannot be removed. It is in use", null);
 		}
 	}
 

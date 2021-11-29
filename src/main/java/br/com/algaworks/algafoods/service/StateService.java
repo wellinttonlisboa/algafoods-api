@@ -39,7 +39,7 @@ public class StateService {
 	}
 
 	public State findByIdOrThrowBadRequestException(Long id) {
-		return stateRepository.findById(id).orElseThrow(() -> new BadRequestException("State not Found"));
+		return stateRepository.findById(id).orElseThrow(() -> new BadRequestException("State not Found", null));
 	}
 	
 	public List<State> findByName(String name) {
@@ -55,7 +55,7 @@ public class StateService {
 		try {
 			return stateRepository.save(StateMapper.INSTANCE.toState(statePostRequestBody));
 		} catch (DataIntegrityViolationException | EntityNotFoundException e) {
-			throw new BadRequestException("The State cannot be saved");
+			throw new BadRequestException("The State cannot be saved", null);
 		}
 	}
 
@@ -85,7 +85,7 @@ public class StateService {
 		try {
 			stateRepository.save(state);
 		} catch (EntityNotFoundException | JpaObjectRetrievalFailureException e) {
-			throw new BadRequestException("The state cannot be saved");
+			throw new BadRequestException("The state cannot be saved", null);
 		}
 	}
 	
@@ -93,7 +93,7 @@ public class StateService {
 		try {
 			stateRepository.delete(findByIdOrThrowBadRequestException(id));
 		} catch (DataIntegrityViolationException e) {
-			throw new BadRequestException("The state cannot be removed it is in use");
+			throw new BadRequestException("The state cannot be removed it is in use", null);
 		}
 	}
 

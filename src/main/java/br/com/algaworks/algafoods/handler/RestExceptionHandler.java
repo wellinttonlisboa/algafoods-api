@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +23,10 @@ import br.com.algaworks.algafoods.exception.ValidationExceptionDetails;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
-
+  
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<BadRequestExceptionDetails> handleBadRequestException(BadRequestException badRequestException) {
+    public ResponseEntity<BadRequestExceptionDetails> handleBadRequestException(BadRequestException 
+    		badRequestException) {
         return new ResponseEntity<>(
                 BadRequestExceptionDetails.builder()
                         .timestamp(LocalDateTime.now())
@@ -32,16 +34,19 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                         .title("Bad Request Exception, Check the Documentation")
                         .details(badRequestException.getMessage())
                         .developerMessage(badRequestException.getClass().getName())
+                        .cause(ExceptionUtils.getRootCause(badRequestException.getCause()).getLocalizedMessage())
                         .build(), HttpStatus.BAD_REQUEST);
     }
 
+   
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
         List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
 
         String fields = fieldErrors.stream().map(FieldError::getField).collect(Collectors.joining(", "));
-        String fieldsMessage = fieldErrors.stream().map(FieldError::getDefaultMessage).collect(Collectors.joining(", "));
+        String fieldsMessage = fieldErrors.stream().map(FieldError::getDefaultMessage)
+        		.collect(Collectors.joining(", "));
 
         return new ResponseEntity<>(
                 ValidationExceptionDetails.builder()

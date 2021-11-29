@@ -40,7 +40,7 @@ public class RestaurantService {
 	}
 
 	public Restaurant findByIdOrThrowBadRequestException(Long id) {
-		return restaurantRepository.findById(id).orElseThrow(() -> new BadRequestException("Restaurant not Found"));
+		return restaurantRepository.findById(id).orElseThrow(() -> new BadRequestException("Restaurant not Found", null));
 	}
 	
 	public List<Restaurant> findByName(String name) {
@@ -89,7 +89,7 @@ public class RestaurantService {
 		try {
 			return restaurantRepository.save(RestaurantMapper.INSTANCE.toRestaurant(restaurantPostRequestBody));
 		} catch (DataIntegrityViolationException | EntityNotFoundException e) {
-			throw new BadRequestException("The Restaurant cannot be saved");
+			throw new BadRequestException("The Restaurant cannot be saved", null);
 		}
 	}
 
@@ -127,7 +127,7 @@ public class RestaurantService {
 		try {
 			restaurantRepository.save(restaurant);
 		} catch (EntityNotFoundException | JpaObjectRetrievalFailureException e) {
-			throw new BadRequestException("The Restaurant cannot be saved");
+			throw new BadRequestException("The Restaurant cannot be saved", null);
 		}
 	}
 
@@ -135,7 +135,7 @@ public class RestaurantService {
 		try {
 			restaurantRepository.delete(findByIdOrThrowBadRequestException(id));
 		} catch (DataIntegrityViolationException e) {
-			throw new BadRequestException("The Restaurant cannot be removed. Ist is in use");
+			throw new BadRequestException("The Restaurant cannot be removed. Ist is in use", null);
 		}
 	}
 

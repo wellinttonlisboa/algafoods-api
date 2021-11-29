@@ -3,6 +3,8 @@ package br.com.algaworks.algafoods.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -69,7 +71,7 @@ public class CityController {
 	}
 
 	@PostMapping
-	public ResponseEntity<City> save(@RequestBody CityPostRequestBody cityPostRequestBody) {
+	public ResponseEntity<City> save(@RequestBody @Valid CityPostRequestBody cityPostRequestBody) {
 		return new ResponseEntity<>(cityService.save(cityPostRequestBody), HttpStatus.CREATED);
 	}
 
@@ -80,7 +82,7 @@ public class CityController {
 	}
 	
 	@PutMapping
-	public ResponseEntity<Void> replace(@RequestBody CityPutRequestBody cityPutRequestBody) {
+	public ResponseEntity<Void> replace(@RequestBody @Valid CityPutRequestBody cityPutRequestBody) {
 		cityService.replace(cityPutRequestBody);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}

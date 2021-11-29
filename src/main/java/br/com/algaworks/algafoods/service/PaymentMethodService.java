@@ -40,7 +40,7 @@ public class PaymentMethodService {
 
 	public PaymentMethod findByIdOrThrowBadRequestException(Long id) {
 		return paymentMethodRepository.findById(id)
-				.orElseThrow(() -> new BadRequestException("PaymentMethod not Found"));
+				.orElseThrow(() -> new BadRequestException("PaymentMethod not Found", null));
 	}
 
 	public List<PaymentMethod> findByName(String name) {
@@ -57,7 +57,7 @@ public class PaymentMethodService {
 			return paymentMethodRepository
 					.save(PaymentMethodMapper.INSTANCE.toPaymentMethod(paymentMethodPostRequestBody));
 		} catch (DataIntegrityViolationException | EntityNotFoundException e) {
-			throw new BadRequestException("The payment method cannot be saved");
+			throw new BadRequestException("The payment method cannot be saved", null);
 		}
 	}
 
@@ -87,7 +87,7 @@ public class PaymentMethodService {
 		try {
 			paymentMethodRepository.save(paymentMethod);
 		} catch (EntityNotFoundException | JpaObjectRetrievalFailureException e) {
-			throw new BadRequestException("The payment method cannot be saved");
+			throw new BadRequestException("The payment method cannot be saved", null);
 		}
 	}
 	
@@ -95,7 +95,7 @@ public class PaymentMethodService {
 		try {
 			paymentMethodRepository.delete(findByIdOrThrowBadRequestException(id));
 		} catch (DataIntegrityViolationException e) {
-			throw new BadRequestException("The payment method cannot be removed. It is in use");
+			throw new BadRequestException("The payment method cannot be removed. It is in use", null);
 		}
 	}
 

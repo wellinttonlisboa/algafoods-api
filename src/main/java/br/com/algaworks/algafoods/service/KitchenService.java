@@ -39,7 +39,7 @@ public class KitchenService {
     }
 
     public Kitchen findByIdOrThrowBadRequestException(Long id) {
-    	return kitchenRepository.findById(id).orElseThrow(() -> new BadRequestException("Kitchen not Found"));
+    	return kitchenRepository.findById(id).orElseThrow(() -> new BadRequestException("Kitchen not Found", null));
     }
     
     public List<Kitchen> findByName(String name) {
@@ -55,7 +55,7 @@ public class KitchenService {
 		try {
 			return kitchenRepository.save(KitchenMapper.INSTANCE.toKitchen(kitchenPostRequestBody));
 		} catch (DataIntegrityViolationException | EntityNotFoundException e) {
-			throw new BadRequestException("The Kitchen cannot be saved");
+			throw new BadRequestException("The Kitchen cannot be saved", null);
 		}
     }
 
@@ -85,7 +85,7 @@ public class KitchenService {
 		try {
 			kitchenRepository.save(kitchen);
 		} catch (EntityNotFoundException | JpaObjectRetrievalFailureException e) {
-			throw new BadRequestException("The kitchen cannot be updated");
+			throw new BadRequestException("The kitchen cannot be updated", null);
 		}
     }
 
@@ -93,7 +93,7 @@ public class KitchenService {
         try {
             kitchenRepository.delete(findByIdOrThrowBadRequestException(id));
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("The Kitchen cannot be removed. It is in use");
+            throw new BadRequestException("The Kitchen cannot be removed. It is in use", null);
         }
     }
 

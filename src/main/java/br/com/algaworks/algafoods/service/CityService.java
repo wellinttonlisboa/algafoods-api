@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.ConstraintViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -40,7 +41,8 @@ public class CityService {
 	}
 
 	public City findByIdOrThrowBadRequestException(Long id) {
-		return cityRepository.findById(id).orElseThrow(() -> new BadRequestException("City not Found"));
+		return cityRepository.findById(id).orElseThrow(() -> new BadRequestException("City not Found", 
+				new Throwable("There is no city in the database with this id")));
 	}
 	
 	public List<City> findByName(String name) {
@@ -63,8 +65,8 @@ public class CityService {
 	public City save(CityPostRequestBody cityPostRequestBody) {
 		try {
 			return cityRepository.save(CityMapper.INSTANCE.toCity(cityPostRequestBody));
-		} catch (DataIntegrityViolationException | EntityNotFoundException e) {
-			throw new BadRequestException("The City cannot be saved");
+		} catch (DataIntegrityViolationException | ConstraintViolationException e) {
+			throw new BadRequestException("The City cannot be saved", e.getCause());
 		}
 	}
 
@@ -94,7 +96,7 @@ public class CityService {
 		try {
 			cityRepository.save(city);
 		} catch (EntityNotFoundException | JpaObjectRetrievalFailureException e) {
-			throw new BadRequestException("The city cannot be updated");
+			throw new BadRequestException("The city cannot be updated", e.getCause());
 		}
 	}
 	
@@ -102,7 +104,7 @@ public class CityService {
 		try {
 			cityRepository.delete(findByIdOrThrowBadRequestException(id));
 		} catch (DataIntegrityViolationException e) {
-			throw new BadRequestException("The city cannot be removed. It is in use");
+			throw new BadRequestException("The city cannot be removed. It is in use", e.getCause());
 		}
 	}
 
