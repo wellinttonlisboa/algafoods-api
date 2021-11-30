@@ -28,7 +28,7 @@ public class City {
 	private Long id;
 	
 	@NotEmpty(message = "The city name cannot be empty")
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String name;
 	
 	@ManyToOne(optional = false)

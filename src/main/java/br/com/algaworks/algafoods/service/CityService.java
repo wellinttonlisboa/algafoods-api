@@ -40,9 +40,8 @@ public class CityService {
 		return cityRepository.findAll();
 	}
 
-	public City findByIdOrThrowBadRequestException(Long id) {
-		return cityRepository.findById(id).orElseThrow(() -> new BadRequestException("City not Found", 
-				new Throwable("There is no city in the database with this id")));
+	public City findByIdOrThrowEntityNotFoundException(Long id) {
+		return cityRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("City not Found"));
 	}
 	
 	public List<City> findByName(String name) {
@@ -72,7 +71,7 @@ public class CityService {
 
 	@Transactional
 	public City replacePartial(Long id, Map<String, Object> patchRequestBody) {
-        City updatedCity = findByIdOrThrowBadRequestException(id);
+        City updatedCity = findByIdOrThrowEntityNotFoundException(id);
         
         ObjectMapper objectMapper = new ObjectMapper();
         City city = objectMapper.convertValue(patchRequestBody, City.class);
@@ -89,20 +88,20 @@ public class CityService {
 
 	@Transactional
 	public void replace(CityPutRequestBody cityPutRequestBody) {
-		City savedCity = findByIdOrThrowBadRequestException(cityPutRequestBody.getId());
+		City savedCity = findByIdOrThrowEntityNotFoundException(cityPutRequestBody.getId());
 		City city = CityMapper.INSTANCE.toCity(cityPutRequestBody);
 		city.setId(savedCity.getId());
 		
 		try {
 			cityRepository.save(city);
-		} catch (EntityNotFoundException | JpaObjectRetrievalFailureException e) {
+		} catch (JpaObjectRetrievalFailureException e) {
 			throw new BadRequestException("The city cannot be updated", e.getCause());
 		}
 	}
 	
 	public void delete(Long id) {
 		try {
-			cityRepository.delete(findByIdOrThrowBadRequestException(id));
+			cityRepository.delete(findByIdOrThrowEntityNotFoundException(id));
 		} catch (DataIntegrityViolationException e) {
 			throw new BadRequestException("The city cannot be removed. It is in use", e.getCause());
 		}

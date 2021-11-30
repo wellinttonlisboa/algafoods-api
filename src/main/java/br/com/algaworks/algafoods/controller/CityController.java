@@ -45,7 +45,7 @@ public class CityController {
 
 	@GetMapping(path = "/{id}")
 	public ResponseEntity<City> findById(@PathVariable Long id) {
-		return ResponseEntity.ok(cityService.findByIdOrThrowBadRequestException(id));
+		return ResponseEntity.ok(cityService.findByIdOrThrowEntityNotFoundException(id));
 	}
 
 	@GetMapping(path = "/find")

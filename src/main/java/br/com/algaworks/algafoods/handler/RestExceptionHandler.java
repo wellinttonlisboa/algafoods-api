@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,8 +25,8 @@ import br.com.algaworks.algafoods.exception.ValidationExceptionDetails;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
-  
-    @ExceptionHandler(BadRequestException.class)
+
+	@ExceptionHandler(BadRequestException.class)
     public ResponseEntity<BadRequestExceptionDetails> handleBadRequestException(BadRequestException 
     		badRequestException) {
         return new ResponseEntity<>(
@@ -34,11 +36,26 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                         .title("Bad Request Exception, Check the Documentation")
                         .details(badRequestException.getMessage())
                         .developerMessage(badRequestException.getClass().getName())
-                        .cause(ExceptionUtils.getRootCause(badRequestException.getCause()).getLocalizedMessage())
+                        .cause(badRequestException.getCause() != null ? ExceptionUtils
+                        		.getRootCause(badRequestException.getCause()).getLocalizedMessage() : null)
                         .build(), HttpStatus.BAD_REQUEST);
     }
 
-   
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<BadRequestExceptionDetails> handleEntityNotFoundException(EntityNotFoundException 
+    		entityNotFoundException) {
+        return new ResponseEntity<>(
+                BadRequestExceptionDetails.builder()
+                        .timestamp(LocalDateTime.now())
+                        .status(HttpStatus.NOT_FOUND.value())
+                        .title("Not Found Exception, Check the Documentation")
+                        .details(entityNotFoundException.getMessage())
+                        .developerMessage(entityNotFoundException.getClass().getName())
+                        .cause(entityNotFoundException.getCause() != null ? ExceptionUtils
+                        		.getRootCause(entityNotFoundException.getCause()).getLocalizedMessage() : null)
+                        .build(), HttpStatus.NOT_FOUND);
+    }
+    
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -64,14 +81,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleExceptionInternal(
             Exception ex, @Nullable Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-        ExceptionDetails exceptionDetails = ExceptionDetails.builder()
-                .timestamp(LocalDateTime.now())
-                .status(status.value())
-                .title(ex.getCause().getMessage())
-                .details(ex.getMessage())
-                .developerMessage(ex.getClass().getName())
-                .build();
-
-        return new ResponseEntity<>(exceptionDetails, headers, status);
+        return new ResponseEntity<>(
+        		ExceptionDetails.builder()
+                	.timestamp(LocalDateTime.now())
+                	.status(status.value())
+                	.title(ex.getCause().getMessage())
+                	.details(ex.getMessage())
+                	.developerMessage(ex.getClass().getName())
+                	.build(), headers, status);
     }
+    
 }
