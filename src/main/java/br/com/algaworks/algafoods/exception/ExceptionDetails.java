@@ -5,17 +5,19 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
 @Data
 @SuperBuilder
+@Builder
+@JsonInclude(Include.NON_NULL)
 public class ExceptionDetails {
     protected String title;
     protected int status;
     protected String details;
     protected String developerMessage;
-    @JsonInclude(Include.NON_NULL)
     protected String cause;
     protected LocalDateTime timestamp;
 }

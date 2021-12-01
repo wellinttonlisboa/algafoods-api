@@ -1,6 +1,6 @@
 package br.com.algaworks.algafoods.exception;
 
-public class BadRequestException extends RuntimeException{
+public class BadRequestException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 

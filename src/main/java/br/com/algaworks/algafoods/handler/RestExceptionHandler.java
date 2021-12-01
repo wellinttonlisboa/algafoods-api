@@ -24,7 +24,7 @@ import br.com.algaworks.algafoods.exception.ExceptionDetails;
 import br.com.algaworks.algafoods.exception.ValidationExceptionDetails;
 
 @ControllerAdvice
-public class RestExceptionHandler extends ResponseEntityExceptionHandler {
+public class RestExceptionHandler<C, B> extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(BadRequestException.class)
     public ResponseEntity<BadRequestExceptionDetails> handleBadRequestException(BadRequestException 
@@ -85,7 +85,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         		ExceptionDetails.builder()
                 	.timestamp(LocalDateTime.now())
                 	.status(status.value())
-                	.title(ex.getCause().getMessage())
+                	.title(status.getReasonPhrase())
                 	.details(ex.getMessage())
                 	.developerMessage(ex.getClass().getName())
                 	.build(), headers, status);
