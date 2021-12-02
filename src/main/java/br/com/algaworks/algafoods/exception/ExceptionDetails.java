@@ -14,10 +14,12 @@ import lombok.experimental.SuperBuilder;
 @Builder
 @JsonInclude(Include.NON_NULL)
 public class ExceptionDetails {
+	
     protected String title;
     protected int status;
+    protected String type;
     protected String details;
     protected String developerMessage;
-    protected String cause;
     protected LocalDateTime timestamp;
+    
 }
