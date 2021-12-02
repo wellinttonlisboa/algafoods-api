@@ -12,11 +12,16 @@ spring:
       maximum-pool-size: 5
       minimum-idle: 3
       idle-timeout: 10000
+  jackson:    deserialization:      fail-on-unknown-properties: true
+      fail-on-ignored-properties: true
+      
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:    resources:      add-mappings: false
   jpa:
 #    generate-ddl: true    
 #    hibernate:
-#      ddl-auto: update      
-    show-sql: true
+#      ddl-auto: update          show-sql: true
  
 springdoc:
   api-docs:

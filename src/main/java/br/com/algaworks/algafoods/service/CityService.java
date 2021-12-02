@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.algaworks.algafoods.domain.City;
@@ -74,6 +75,9 @@ public class CityService {
         City updatedCity = findByIdOrThrowEntityNotFoundException(id);
         
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, Boolean.TRUE);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, Boolean.TRUE);
+        
         City city = objectMapper.convertValue(patchRequestBody, City.class);
         
         patchRequestBody.forEach((key, value) -> {
