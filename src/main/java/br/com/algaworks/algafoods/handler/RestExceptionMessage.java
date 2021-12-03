@@ -5,14 +5,13 @@ import lombok.Getter;
 @Getter
 public enum RestExceptionMessage {
 	
-	MSG_GENERIC_ERROR("Contact administrator", "Contact administrator");
+	MSG_GENERIC_ERROR("Contact administrator"),
+	RECOURCE_NOT_FOUND("The resource %s you tried to access is non-existent");
 	
 	private String details;
-	private String developMessage;
 	
-	RestExceptionMessage(String details, String developMessage) {
+	RestExceptionMessage(String details) {
 		this.details = details;
-		this.developMessage = developMessage;
 	}
 	
 	

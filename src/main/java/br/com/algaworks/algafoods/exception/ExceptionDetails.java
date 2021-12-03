@@ -19,7 +19,7 @@ public class ExceptionDetails {
     protected int status;
     protected String type;
     protected String details;
-    protected String developerMessage;
+    protected String userMessage;
     protected LocalDateTime timestamp;
     
 }

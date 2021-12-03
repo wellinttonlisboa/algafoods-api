@@ -31,6 +31,7 @@ public class City {
 	@Column(nullable = false, unique = true)
 	private String name;
 	
+	@NotEmpty(message = "The state name cannot be empty")
 	@ManyToOne(optional = false)
 	private State state;
 }

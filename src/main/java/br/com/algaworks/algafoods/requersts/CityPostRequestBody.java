@@ -14,9 +14,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CityPostRequestBody {
 
-	@NotNull(message = "The city name cannot be null")
+	@NotNull(message = "The city name cannot be empty")
     private String name;
-	@NotNull(message = "The state cannot be null")
+	
+	@NotNull(message = "The state cannot be empty")
 	private State state;
 
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import br.com.algaworks.algafoods.exception.BadRequestException;
@@ -26,16 +27,27 @@ import br.com.algaworks.algafoods.exception.ValidationExceptionDetails;
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<Object> handleUncaught(Exception exception, WebRequest request) {
+
+		return handleExceptionInternal(exception, ExceptionDetails.builder()
+				.title(RestExceptionType.SYSTEM_ERROR.getTitle())
+				.status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+				.details(RestExceptionMessage.MSG_GENERIC_ERROR.getDetails())
+				.timestamp(LocalDateTime.now())
+			.build(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+	}
+	
 	@ExceptionHandler(BadRequestException.class)
     public ResponseEntity<BadRequestExceptionDetails> handleBadRequestException(BadRequestException 
-    		badRequestException) {
+    		exception) {
         return new ResponseEntity<>(
                 BadRequestExceptionDetails.builder()
                         .timestamp(LocalDateTime.now())
                         .status(HttpStatus.BAD_REQUEST.value())
                         .title("Bad Request Exception, Check the Documentation")
-                        .details(badRequestException.getMessage())
-                        .developerMessage(badRequestException.getClass().getName())
+                        .details(exception.getMessage())
+                     //   .developerMessage(exception.getClass().getName())
 //                        .cause(badRequestException.getCause() != null ? ExceptionUtils
 //                        		.getRootCause(badRequestException.getCause()).getLocalizedMessage() : null)
                         .build(), HttpStatus.BAD_REQUEST);
@@ -43,18 +55,33 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<BadRequestExceptionDetails> handleEntityNotFoundException(EntityNotFoundException 
-    		entityNotFoundException) {
+    		exception) {
         return new ResponseEntity<>(
                 BadRequestExceptionDetails.builder()
                         .timestamp(LocalDateTime.now())
                         .status(HttpStatus.NOT_FOUND.value())
                         .title("Not Found Exception, Check the Documentation")
-                        .details(entityNotFoundException.getMessage())
-                        .developerMessage(entityNotFoundException.getClass().getName())
+                        .details(exception.getMessage())
+                       // .developerMessage(exception.getClass().getName())
 //                        .cause(entityNotFoundException.getCause() != null ? ExceptionUtils
 //                        		.getRootCause(entityNotFoundException.getCause()).getLocalizedMessage() : null)
-                        .build(), HttpStatus.NOT_FOUND);
+                .build(), HttpStatus.NOT_FOUND);
     }
+    
+    @Override
+	protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException exception, 
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+		
+		return handleExceptionInternal(exception, 
+				ExceptionDetails.builder()
+					.title(RestExceptionType.RECOURCE_NOT_FOUND.getTitle())
+					.status(status.value())
+					.details(String.format(RestExceptionMessage.RECOURCE_NOT_FOUND.getDetails()
+							, exception.getRequestURL()))
+					.userMessage(RestExceptionMessage.MSG_GENERIC_ERROR.getDetails())
+					.timestamp(LocalDateTime.now())
+				.build(), headers, status, request);
+	}
     
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -64,14 +91,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         String fields = fieldErrors.stream().map(FieldError::getField).collect(Collectors.joining(", "));
         String fieldsMessage = fieldErrors.stream().map(FieldError::getDefaultMessage)
         		.collect(Collectors.joining(", "));
-
+        
         return new ResponseEntity<>(
                 ValidationExceptionDetails.builder()
                         .timestamp(LocalDateTime.now())
                         .status(status.value())
                         .title("Bad Request Exception, Invalid Fields")
                         .details("Check the field(s) error")
-                        .developerMessage(exception.getClass().getName())
+                      //  .developerMessage(exception.getClass().getName())
                         .fields(fields)
                         .fieldsMessage(fieldsMessage)
                         .build(), HttpStatus.BAD_REQUEST);
@@ -79,15 +106,21 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 //		return super.handleExceptionInternal(exception, body, headers, status, request);
     }
 
+    
+
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(
             Exception exception, @Nullable Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
-    	   	
-		return super.handleExceptionInternal(exception, ExceptionDetails.builder()
-				.title(Objects.isNull(body) ? status.getReasonPhrase() : Objects.toString(body))
+    	   
+		body = Objects.isNull(body) ? ExceptionDetails.builder()
+				.title(status.getReasonPhrase())
 				.status(status.value())
 				.details(RestExceptionMessage.MSG_GENERIC_ERROR.getDetails())
-				.timestamp(LocalDateTime.now()).build(), headers, status, request);
+				.timestamp(LocalDateTime.now())
+				.build()
+				: body;
+    	
+		return super.handleExceptionInternal(exception, body, headers, status, request);
     }
     
 }

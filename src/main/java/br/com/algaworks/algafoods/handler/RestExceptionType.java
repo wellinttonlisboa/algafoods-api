@@ -5,7 +5,9 @@ import lombok.Getter;
 @Getter
 public enum RestExceptionType {
 	
-	ENTITY_NOT_FOUND("/entity-not-found", "Entity not found");
+	ENTITY_NOT_FOUND("/entity-not-found", "Entity not found"),
+	RECOURCE_NOT_FOUND("/recource-not-found", "Recource not found"),
+	SYSTEM_ERROR("/system-error", "System error");
 	
 	public final String base_url = "https://www.algafoods.com.br";
 	
