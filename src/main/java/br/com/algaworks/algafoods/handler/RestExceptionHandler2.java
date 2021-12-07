@@ -22,20 +22,20 @@ import br.com.algaworks.algafoods.exception.BadRequestExceptionDetails;
 import br.com.algaworks.algafoods.exception.ValidationExceptionDetails;
 
 @ControllerAdvice
-@Order(Ordered.LOWEST_PRECEDENCE)
-public class RestExceptionHandler extends ResponseEntityExceptionHandler {
+@Order(Ordered.HIGHEST_PRECEDENCE)
+public class RestExceptionHandler2 extends ResponseEntityExceptionHandler {
 
 //	@ExceptionHandler(Exception.class)
 //	public ResponseEntity<Object> handleUncaught(Exception exception, WebRequest request) {
 //
 //		return handleExceptionInternal(exception, ExceptionDetails.builder()
-//				.title("RestExceptionHandler")
+//				.title("RestExceptionHandler2")
 //				.status(HttpStatus.INTERNAL_SERVER_ERROR.value())
 //				.details(RestExceptionMessage.MSG_GENERIC_ERROR.getDetails())
 //				.timestamp(LocalDateTime.now())
 //			.build(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
 //	}
-	
+//	
 	@ExceptionHandler(BadRequestException.class)
     public ResponseEntity<BadRequestExceptionDetails> handleBadRequestException(BadRequestException 
     		exception) {
@@ -43,7 +43,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                 BadRequestExceptionDetails.builder()
                         .timestamp(LocalDateTime.now())
                         .status(HttpStatus.BAD_REQUEST.value())
-                        .title("RestExceptionHandler - Bad Request Exception, Check the Documentation")
+                        .title("RestExceptionHandler2 - Bad Request Exception, Check the Documentation")
                         .details(exception.getMessage())
                      //   .developerMessage(exception.getClass().getName())
 //                        .cause(badRequestException.getCause() != null ? ExceptionUtils
@@ -93,7 +93,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                 ValidationExceptionDetails.builder()
                         .timestamp(LocalDateTime.now())
                         .status(status.value())
-                        .title("RestExceptionHandler - Bad Request Exception, Invalid Fields")
+                        .title("RestExceptionHandler2 - Bad Request Exception, Invalid Fields")
                         .details("Check the field(s) error")
                       //  .developerMessage(exception.getClass().getName())
                         .fieldErrors(fields)
@@ -101,7 +101,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                       //  .fields(fields)
                         .build(), HttpStatus.BAD_REQUEST);
         
-//		return super.handleExceptionInternal(exception, body, headers, status, request);
+		//return super.handleExceptionInternal(exception, body, headers, status, request);
     }
 //
 //    

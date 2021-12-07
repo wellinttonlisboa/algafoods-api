@@ -1,5 +1,7 @@
 package br.com.algaworks.algafoods.exception;
 
+import java.util.Map;
+
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
@@ -7,7 +9,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class ValidationExceptionDetails extends ExceptionDetails {
 	
-    private final String fields;
-    private final String fieldsMessage;
+    private final Map<String, Object> fieldErrors;
     
 }

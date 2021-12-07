@@ -6,6 +6,7 @@ import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.method.ControllerAdviceBean;
 
 import br.com.algaworks.algafoods.controller.RestaurantController;
 import br.com.algaworks.algafoods.domain.Restaurant;
@@ -56,10 +57,16 @@ public class AlgafoodsApplication {
 //    }
 	public static void main(String[] args) {
 		ApplicationContext appContext = new SpringApplicationBuilder(AlgafoodsApiApplication.class)
-				.web(WebApplicationType.NONE).run(args);
+				.run(args);
 
-		RestaurantController restaurantController = appContext.getBean(RestaurantController.class);
+		//System.out.println(ControllerAdviceBean.findAnnotatedBeans(appContext));
+		
+		//RestaurantController restaurantController = appContext.getBean(RestaurantController.class);
 
+		System.out.println(ControllerAdviceBean.findAnnotatedBeans(appContext));
+		
+		
+		
 //		Restaurant restaurant1 = new Restaurant();
 //		restaurant1.setName("Sushi Bahia");
 //		//restaurant1.setFreight(5d);
@@ -69,13 +76,13 @@ public class AlgafoodsApplication {
 
 //		restaurantController.save(restaurantPost1);
 
-		ResponseEntity<List<Restaurant>> restaurants1 = restaurantController.listAll();
-		for (Restaurant restaurant : restaurants1.getBody()) {
-			System.out.println(restaurant.getId());
-			System.out.println(restaurant.getName());
-			System.out.println(restaurant.getFreight());
-			System.out.println(restaurant.getKitchen().getName());
-		}
+//		ResponseEntity<List<Restaurant>> restaurants1 = restaurantController.listAll();
+//		for (Restaurant restaurant : restaurants1.getBody()) {
+//			System.out.println(restaurant.getId());
+//			System.out.println(restaurant.getName());
+//			System.out.println(restaurant.getFreight());
+//			System.out.println(restaurant.getKitchen().getName());
+//		}
 
 //		ResponseEntity<Restaurant> restaurant2 = restaurantController.findById(2);
 //		System.out.println(restaurant2.getBody().getName());

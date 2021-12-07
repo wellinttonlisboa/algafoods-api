@@ -8,6 +8,9 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.WebApplicationType;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,10 +18,12 @@ import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.web.method.ControllerAdviceBean;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import br.com.algaworks.algafoods.AlgafoodsApiApplication;
 import br.com.algaworks.algafoods.domain.City;
 import br.com.algaworks.algafoods.exception.BadRequestException;
 import br.com.algaworks.algafoods.mapper.CityMapper;
@@ -37,7 +42,7 @@ public class CityService {
 		return cityRepository.findAll(pageable);
 	}
 
-	public List<City> listAllNonPageable() {
+	public List<City> listAllNonPageable() {	
 		return cityRepository.findAll();
 	}
 
