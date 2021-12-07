@@ -2,14 +2,10 @@ package br.com.algaworks.algafoods;
 
 import java.util.List;
 
-import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.web.method.ControllerAdviceBean;
-
-import br.com.algaworks.algafoods.controller.RestaurantController;
-import br.com.algaworks.algafoods.domain.Restaurant;
 
 public class AlgafoodsApplication {
 
@@ -64,9 +60,13 @@ public class AlgafoodsApplication {
 		//RestaurantController restaurantController = appContext.getBean(RestaurantController.class);
 
 		System.out.println(ControllerAdviceBean.findAnnotatedBeans(appContext));
+		List<ControllerAdviceBean> beans = ControllerAdviceBean.findAnnotatedBeans(appContext);
+	    AnnotationAwareOrderComparator.sort(beans);
 		
+		System.out.println(ControllerAdviceBean.findAnnotatedBeans(appContext));
 		
-		
+	    
+	    
 //		Restaurant restaurant1 = new Restaurant();
 //		restaurant1.setName("Sushi Bahia");
 //		//restaurant1.setFreight(5d);
@@ -110,4 +110,41 @@ public class AlgafoodsApplication {
 //			System.out.println(restaurant.getFreight());
 //		}
 	}
+	
+	
+//	private void initControllerAdviceCaches(ApplicationContext applicationContext) {
+//	    if (applicationContext == null) {
+//	        return;
+//	    }
+//	    if (logger.isInfoEnabled()) {
+//	        logger.info("Looking for @ControllerAdvice: " + applicationContext);
+//	    }
+//	    List<ControllerAdviceBean> beans = ControllerAdviceBean.findAnnotatedBeans(applicationContext);
+//	    AnnotationAwareOrderComparator.sort(beans);
+//	    for (ControllerAdviceBean bean : beans) {
+//	        Class<?> beanType = bean.getBeanType();
+//	        Set<Method> attrMethods = selectMethods(beanType, ATTRIBUTE_METHODS);
+//	        if (!attrMethods.isEmpty()) {
+//	            this.modelAttributeAdviceCache.put(bean, attrMethods);
+//	            if (logger.isInfoEnabled()) {
+//	                logger.info("Detected @ModelAttribute methods in " + bean);
+//	            }
+//	        }
+//	        Set<Method> binderMethods = selectMethods(beanType, BINDER_METHODS);
+//	        if (!binderMethods.isEmpty()) {
+//	            this.initBinderAdviceCache.put(bean, binderMethods);
+//	            if (logger.isInfoEnabled()) {
+//	                logger.info("Detected @InitBinder methods in " + bean);
+//	            }
+//	        }
+//	        ExceptionHandlerMethodResolver resolver = new ExceptionHandlerMethodResolver(beanType);
+//	        if (resolver.hasExceptionMappings()) {
+//	            this.exceptionHandlerAdviceCache.put(bean, resolver);
+//	            if (logger.isInfoEnabled()) {
+//	                logger.info("Detected @ExceptionHandler methods in " + bean);
+//	            }
+//	        }
+//	    }
+//	}
+	
 }
